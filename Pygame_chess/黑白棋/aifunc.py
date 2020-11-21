@@ -1,89 +1,87 @@
-import math
+import time
 import random
-import copy
-import reversifunc as rf
-import globalvar as gv
 
-# the weights of board, big positive value means top priority for opponent
-weights = [[ 100, -20,  10,   5,   5,  10, -20, 100],
-           [ -20, -50,  -2,  -2,  -2,  -2, -50, -20],
-           [  10,  -2,   1,   1,   1,   1,  -2,  10],
-           [   5,  -2,   1,   1,   1,   1,  -2,   5],
-           [   5,  -2,   1,   1,   1,   1,  -2,   5],
-           [  10,  -2,   1,   1,   1,   1,  -2,  10],
-           [ -20, -50,  -2,  -2,  -2,  -2, -50, -20],
-           [ 100, -20,  10,   5,   5,  10, -20, 100]]
+""" ref: https://www.mygreatlearning.com/blog/alpha-beta-pruning-in-ai/ """
+class MinimaxABAgent:
+    """
+    alpha beta 演算法模版，
+    用途是只要定義好遊戲規則，
+    ai就會透過此演算法計算最佳行動(棋步)
+    
+    必要定義的物件:
+    * state: 類似指標可以inplace修改的物件
+    * game
+       - def getValidMoves(self, state): 回傳一個字典，key值是行動，value是一個action_key，用來走棋或還原state
+       - def evaluation_function(self, state, player_color): 回傳此盤面對「player_color」來說的分數，盤面愈好分數愈高
+       - def is_terminal(self, state): 判斷一場遊戲是否已經結束
+       - def makeMove(self, state, action_key): 自定義action_key行動
+       - def unMakeMove(self, state, action_key): 此函數的用意是state可以還原，就只需創建一次，避免需要大量複製state而耗時
+    """
+    
+    def __init__(self, max_depth, player_color, game, state):
+        """
+        Initiation
+        Parameters
+        ----------
+        max_depth : int
+            The max depth of the tree
+        player_color : int(usually 1 or 2, 0 for empty grid)
+            The player's index as MAX in minimax algorithm
+        """
+        self.max_depth = max_depth
+        self.player_color = player_color
+        self.game = game
+        self.state = state
+        self.node_expanded = 0
+ 
+    def choose_action(self):
+        """ 回傳(行動, state) """
+        self.node_expanded = 0
+ 
+        start_time = time.time()
+ 
+        print("MINIMAX AB : Wait AI is choosing")
+        list_action = self.game.getValidMoves(self.state)
+        eval_score, selected_key_action = self._minimax(0,True,float('-inf'),float('inf'))
+        print(f"MINIMAX : Done, eval = {eval_score}, expanded {self.node_expanded} nodes")
+        eval_time = max(0.00001, time.time() - start_time)
+        print(f"--- {eval_time} seconds ---, avg: {self.node_expanded/eval_time} (explode_node per seconds)")
+        self.game.makeMove(self.state, list_action[selected_key_action])
+        return (selected_key_action, self.state)
+ 
+    def _minimax(self, current_depth, is_max_turn, alpha, beta):
+        
+        self.node_expanded += 1
+ 
+        if current_depth == self.max_depth or self.game.is_terminal(self.state):
+            return self.game.evaluation_function(self.state, self.player_color), ""
+ 
+        possible_action = self.game.getValidMoves(self.state)
+        key_of_actions = list(possible_action.keys())
+ 
+        random.shuffle(key_of_actions) #randomness
+        best_value = float('-inf') if is_max_turn else float('inf')
+        action_target = ""
+        for action_key in key_of_actions:
+            
+            self.game.makeMove(self.state, possible_action[action_key])
+            eval_child, action_child = self._minimax(current_depth+1, not is_max_turn, alpha, beta)
+            self.game.unMakeMove(self.state, possible_action[action_key])
+            
+            max_condition = is_max_turn and best_value < eval_child
+            min_condition = (not is_max_turn) and best_value > eval_child
+            
+            if max_condition or min_condition:
+                best_value = eval_child
+                action_target = action_key
+                
+                if max_condition:
+                    alpha = max(alpha, best_value)
+                else:
+                    beta = min(beta, best_value)
+                    
+                if beta <= alpha:       
+                    break
 
-# evaluate score of the opponent for minimax algorithm, based on mobility and positioning of disks
-def evalScore(board, turn):
-    score = 0
-
-    if turn == gv.P1:
-        opp = gv.P2
-    elif turn == gv.P2:
-        opp = gv.P1
-
-    # positioning of disks
-    for x in range(8):
-        for y in range(8):
-            if board[x][y] == turn:
-                score += weights[x][y]
-            elif board[x][y] == opp:
-                score -= weights[x][y]
-
-    return score
-
-# minimax algorithm with alpha-beta pruning; opponent is maximizing and player is minimizing
-def miniMax(board, depth, alpha, beta, isMaxPlayer, turn):
-    bestMove = None
-
-    if turn == gv.P1:
-        opp = gv.P2
-    elif turn == gv.P2:
-        opp = gv.P1
-
-    if depth == 0 or len(rf.getValidMoves(board, turn)) == 0:
-        return evalScore(board, turn), 1
-
-    # opponent's turn
-    if isMaxPlayer:
-        maxValue = -math.inf
-        moves = rf.getValidMoves(board, turn)
-
-        if len(moves) > 0:
-            random.shuffle(moves)
-
-        for aMove in moves:
-            tempBoard = copy.deepcopy(board)
-            tempBoard = rf.makeMove(tempBoard, turn, aMove[0], aMove[1])
-            curScore, move = miniMax(tempBoard, depth-1, alpha, beta, False, turn)
-
-            if curScore > maxValue:
-                maxValue = curScore
-                bestMove = aMove
-
-            alpha = max(alpha, maxValue)
-            if alpha >= beta:
-                break
-
-        return maxValue, bestMove
-
-    # player's turn
-    else:
-        minValue = math.inf
-        moves = rf.getValidMoves(board, opp)
-
-        for aMove in moves:
-            tempBoard = copy.deepcopy(board)
-            tempBoard = rf.makeMove(tempBoard, opp, aMove[0], aMove[1])
-            curScore, move = miniMax(tempBoard, depth-1, alpha, beta, True, turn)
-
-            if curScore < minValue:
-                minValue = curScore
-                bestMove = aMove
-
-            beta = min(beta, minValue)
-            if alpha >= beta:
-                break
-
-        return minValue, bestMove
+        return best_value, action_target
+    

@@ -54,14 +54,14 @@ class tile(pygame.sprite.Sprite):
         self.xInd = xInd
         self.yInd = yInd
         ini_sprite(self, tile_coord(xInd, yInd), pic_path= "sprites/tile.png")
-        if stone_type!='.':
-            disks = {'x': "sprites/b_disk.png", 'o':"sprites/w_disk.png"}
+        if stone_type!=0:
+            disks = {1: "sprites/b_disk.png", 2:"sprites/w_disk.png"}
             image = pygame.image.load(disks[stone_type])
             self.image.blit(image, (4,4))
             
     def update(self, stone_type):
-        disks = {'x': "sprites/b_disk.png", 'o':"sprites/w_disk.png"}
-        if stone_type!='.':
+        disks = {1: "sprites/b_disk.png", 2:"sprites/w_disk.png"}
+        if stone_type!=0:
             image = pygame.image.load(disks[stone_type])
             self.image.blit(image, (4,4))
     
