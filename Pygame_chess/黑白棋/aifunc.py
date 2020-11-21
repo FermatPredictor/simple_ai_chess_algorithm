@@ -10,6 +10,7 @@ class MinimaxABAgent:
     
     必要定義的物件:
     * state: 類似指標可以inplace修改的物件
+       - def 
     * game
        - def getValidMoves(self, state): 回傳一個字典，key值是行動，value是一個action_key，用來走棋或還原state
        - def evaluation_function(self, state, player_color): 回傳此盤面對「player_color」來說的分數，盤面愈好分數愈高

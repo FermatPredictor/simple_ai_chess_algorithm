@@ -124,7 +124,6 @@ def InGame():
     while True:
         texts.empty()
         if not game.is_terminal():
-            pass
             if game.get_turn()==1 and gv.aiMode or game.get_turn()==2:
                 game.ai_action()
         else:

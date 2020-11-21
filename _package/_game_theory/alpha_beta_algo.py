@@ -10,6 +10,7 @@ class MinimaxABAgent:
     
     必要定義的物件:
     * state: 類似指標可以inplace修改的物件
+       - def next_turn(self): 切換至對手的回合 (用來解「輪空」規則)
     * game
        - def getValidMoves(self, state): 回傳一個字典，key值是行動，value是一個action_key，用來走棋或還原state
        - def evaluation_function(self, state, player_color): 回傳此盤面對「player_color」來說的分數，盤面愈好分數愈高
@@ -58,22 +59,41 @@ class MinimaxABAgent:
  
         possible_action = self.game.getValidMoves(self.state)
         key_of_actions = list(possible_action.keys())
+        
+        """ 若為pass或是單行道的情形，深度往後搜一層 """
+        depth = current_depth if len(key_of_actions)<=1 else current_depth+1
+        
+        if not key_of_actions:
+            """ 處理棋局還未結束，但無棋步可走而換對手的情形(ex: 黑白棋) """
+            self.state.next_turn()
+            eval_child, action_child = self._minimax(depth, is_max_turn, alpha, beta)
+            self.state.next_turn()
+            
+            best_value, action_target  = eval_child, ""
+                
+            if is_max_turn:
+                alpha = max(alpha, best_value)
+            else:
+                beta = min(beta, best_value)
+            return best_value, action_target
+            
  
         random.shuffle(key_of_actions) #randomness
         best_value = float('-inf') if is_max_turn else float('inf')
         action_target = ""
+        
+        
         for action_key in key_of_actions:
             
             self.game.makeMove(self.state, possible_action[action_key])
-            eval_child, action_child = self._minimax(current_depth+1, not is_max_turn, alpha, beta)
+            eval_child, action_child = self._minimax(depth, not is_max_turn, alpha, beta)
             self.game.unMakeMove(self.state, possible_action[action_key])
             
             max_condition = is_max_turn and best_value < eval_child
             min_condition = (not is_max_turn) and best_value > eval_child
             
             if max_condition or min_condition:
-                best_value = eval_child
-                action_target = action_key
+                best_value, action_target  = eval_child, action_key 
                 
                 if max_condition:
                     alpha = max(alpha, best_value)

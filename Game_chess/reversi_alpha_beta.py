@@ -13,6 +13,9 @@ class State():
     
     def opp_color(self):
         return 3^self.playerColor
+    
+    def next_turn(self):
+        self.playerColor = self.opp_color()
 
 # the weights of board, big positive value means top priority for opponent
 weights = [[ 100, -20,  10,   5,   5,  10, -20, 100],
@@ -110,6 +113,7 @@ if __name__=='__main__':
     #          [0,0,0,0,0,0,0,0]]
     """
     待debug，碰到特殊情形輪空規則時，ai會掛掉
+    (目前已處理，待驗正確性)
     """
     board = [[2,2,2,2,2,2,2,2],
              [1,1,1,1,2,1,2,2],
@@ -121,5 +125,5 @@ if __name__=='__main__':
              [2,2,2,2,2,2,0,0]]
     state = State(board, play_color)
     game = Reversi(8,8)
-    AI = MinimaxABAgent(2, play_color, game, state)
+    AI = MinimaxABAgent(10, play_color, game, state)
     result = AI.choose_action()

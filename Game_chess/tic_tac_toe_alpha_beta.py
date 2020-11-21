@@ -13,6 +13,9 @@ class State():
     
     def opp_color(self):
         return 3^self.playerColor
+    
+    def next_turn(self):
+        self.playerColor = self.opp_color()
 
 
 class TicTacToe():
