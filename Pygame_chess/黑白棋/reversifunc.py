@@ -35,6 +35,7 @@ class Reversi():
     def __init__(self, height, width):
         self.width = width
         self.height = height
+        self.eval_mode = 'weight'
     
     def isOnBoard(self, x, y):
         return 0 <= x < self.width and 0 <= y < self.height
@@ -78,17 +79,17 @@ class Reversi():
         moves = {(x, y):self.isValidMove(state, x,y) for x in range(self.width) for y in range(self.height)}
         return {k:v for k,v in moves.items() if v}
     
+        
     def evaluation_function(self, state, tile):
-        # for 8*8 的計分
-        score = 0
-        opp = 3-tile
+        score, opp = 0, 3^tile
         for x in range(8):
             for y in range(8):
                 if state.board[x][y] == tile:
-                    score += weights[x][y]
+                    score += weights[x][y] if self.eval_mode == 'weight' else 1
                 elif state.board[x][y] == opp:
-                    score -= weights[x][y]    
+                    score -= weights[x][y] if self.eval_mode == 'weight' else 1
         return score
+        
     
     def is_terminal(self, state):
         terminal = False
@@ -148,6 +149,15 @@ class Reversi_Gmae():
                     scores[tile] += 1
         return scores[1], scores[2]
     
+    def __count_empty_grid(self):
+        empty_grid = 0
+        for x in range(self.width):
+            for y in range(self.height):
+                if self.state.board[y][x]==0:
+                    empty_grid += 1
+        return empty_grid
+    
     def ai_action(self):
+        self.game.eval_mode = 'weight' if self.__count_empty_grid()>10 else 'num'
         AI = MinimaxABAgent(3, self.get_turn(), self.game, self.state)
         AI.choose_action()

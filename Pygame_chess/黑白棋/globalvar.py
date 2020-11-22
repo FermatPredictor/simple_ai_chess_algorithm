@@ -1,5 +1,5 @@
 # 視窗
-WIDTH, HEIGHT = 960, 720
+WIDTH, HEIGHT = 1060, 720
 
 # 創建顏色(三個參數為RGB)
 GREEN = (128,255,0)

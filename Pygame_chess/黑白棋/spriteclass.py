@@ -45,20 +45,21 @@ class my_button(pygame.sprite.Sprite):
         msg_rect.center = self.image.get_rect().center
         self.image.blit(msg, msg_rect.topleft)  #繪製訊息，自動將文字置中
 
-def tile_coord(x,y):
-    return (196+x*72, 72+y*72)
+
 
 # board tiles
 class tile(pygame.sprite.Sprite):
     def __init__(self, xInd, yInd, stone_type='.'):
-        self.xInd = xInd
-        self.yInd = yInd
-        ini_sprite(self, tile_coord(xInd, yInd), pic_path= "sprites/tile.png")
+        self.xInd, self.yInd = xInd, yInd
+        ini_sprite(self, self.__tile_coord(xInd, yInd), pic_path= "sprites/tile.png")
         if stone_type!=0:
             disks = {1: "sprites/b_disk.png", 2:"sprites/w_disk.png"}
             image = pygame.image.load(disks[stone_type])
             self.image.blit(image, (4,4))
-            
+    
+    def __tile_coord(self, x,y):
+        return (236+x*72, 72+y*72)
+
     def update(self, stone_type):
         image = pygame.image.load("sprites/tile.png")
         self.image.blit(image, (0,0))

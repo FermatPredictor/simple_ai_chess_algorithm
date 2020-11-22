@@ -4,9 +4,6 @@ import spriteclass as sc
 import reversifunc as rf
 import globalvar as gv
 
-
-
-
 pygame.init()
 
 screen = pygame.display.set_mode((gv.WIDTH, gv.HEIGHT))
@@ -27,11 +24,8 @@ def Intro():
     for i in range(3):
         my_buttons[i] = sc.my_button((200*(i+1), 400),(150, 70), color_dict[i], (gv.HELV, 30, gv.BLACK, f'{diff_dict[i]}'))
         buttons.add(my_buttons[i])
-    
-    aiButton = sc.my_button((780, 625), (150, 70), gv.ORANGE, (gv.HELV, 30, gv.BLACK, 'AI Mode'))
 
     texts.add(gameTitle, chooseDiff)
-    buttons.add(aiButton)
 
     while True:
         for evi in pygame.event.get():
@@ -40,56 +34,13 @@ def Intro():
             if evi.type == pygame.MOUSEBUTTONDOWN:
                 for i in range(3):
                     if my_buttons[i].rect.collidepoint(pygame.mouse.get_pos()):
-                        gv.P1_ai = i+2
                         InGame()
-                if aiButton.rect.collidepoint(pygame.mouse.get_pos()):
-                    AiMode()
-
+                        
         screen.fill(gv.BROWN)
         buttons.draw(screen)
         texts.draw(screen)
         pygame.display.update()
 
-def AiMode():
-    texts = pygame.sprite.Group()
-    buttons = pygame.sprite.Group()
-
-    aiTitle = sc.text('AI Mode', gv.NEXT, 110, (260, 50), gv.GOLD)
-    
-    def coord(X, Y):
-        return (200+200*X, 200+125*Y)
-    
-    my_buttons = [[None]*3 for _ in range(3)]
-    color_dict = {0:gv.GREEN, 1:gv.YELLOW, 2:gv.ORANGE}
-    diff_dict = {0:'E', 1:'N', 2:'H'}
-    for i in range(3):
-        for j in range(3):
-            my_buttons[i][j] = sc.my_button(coord(j, i),(150, 70), color_dict[i], (gv.HELV, 30, gv.BLACK, f'{diff_dict[i]} v {diff_dict[j]}'))
-            buttons.add(my_buttons[i][j])
-    backButton = sc.my_button((780, 625),(150, 70), gv.ORANGE, (gv.HELV, 30, gv.BLACK, 'Back'))
-
-    texts.add(aiTitle)
-    buttons.add(backButton)
-
-    while True:
-        for eva in pygame.event.get():
-            if eva.type == pygame.QUIT:
-                pygame.display.quit()
-
-            if eva.type == pygame.MOUSEBUTTONDOWN:
-                for i in range(3):
-                    for j in range(3):
-                        if my_buttons[i][j].rect.collidepoint(pygame.mouse.get_pos()):
-                            gv.P1_ai = i+2
-                            gv.P2_ai = j+2
-                            InGame()
-                if backButton.rect.collidepoint(pygame.mouse.get_pos()):
-                    Intro()
-
-        screen.fill(gv.BROWN)
-        buttons.draw(screen)
-        texts.draw(screen)
-        pygame.display.update()
 
 # gameplay
 def InGame():
@@ -99,12 +50,23 @@ def InGame():
     buttons = pygame.sprite.Group()
     ui_board = sc.chessBoard(game.get_board())
     
-    retryButton = sc.my_button((800, 100), (150, 70), gv.YELLOW, (gv.HELV, 35, gv.BLACK, 'Retry'))
-    backButton = sc.my_button((800, 190), (150, 70), gv.ORANGE, (gv.HELV, 35, gv.BLACK, 'Back'))
-    editButton = sc.my_button((800, 280), (150, 70), gv.YELLOW, (gv.HELV, 35, gv.BLACK, 'Edit'))
-    playButton = sc.my_button((800, 370), (150, 70), gv.ORANGE, (gv.HELV, 35, gv.BLACK, 'Play'))
-    turnButton = sc.my_button((800, 460), (150, 70), gv.GREEN, (gv.HELV, 22, gv.BLACK, 'ChangeTurn'))
-    buttons.add(retryButton, backButton, playButton, editButton, turnButton)
+    my_buttons = [None]*5
+    my_button_texts = ['Retry', 'Back', 'Edit', 'Play', 'Pass']
+    my_button_colors = [gv.YELLOW, gv.ORANGE, gv.YELLOW, gv.ORANGE, gv.GREEN]
+    for i in range(5):
+        my_buttons[i] = sc.my_button((850, 100+90*i), (150, 70), my_button_colors[i], (gv.HELV, 35, gv.BLACK, my_button_texts[i]))
+        buttons.add(my_buttons[i])
+        
+    def coord(X, Y):
+        return (10+75*X, 460+35*Y)
+    
+    ai_buttons = [[None]*3 for _ in range(2)]
+    color_dict = {0:gv.GREEN, 1:gv.YELLOW, 2:gv.ORANGE}
+    diff_dict = {0:'E', 1:'N', 2:'H'}
+    for i in range(2):
+        for j in range(3):
+            ai_buttons[i][j] = sc.my_button(coord(j, i),(70, 30), color_dict[j], (gv.HELV, 30, gv.BLACK, f'P{i} {diff_dict[j]}'))
+            buttons.add(ai_buttons[i][j])
 
     blackScore, whiteScore = 2, 2
     click_x, click_y = None, None
@@ -147,21 +109,29 @@ def InGame():
                             game.set_board(click_x, click_y)
                         if MODE == 'play' and not is_ai_turn(): 
                             game.make_move(click_x, click_y)
-                        
-                if retryButton.rect.collidepoint(pygame.mouse.get_pos()):
+                
+                if my_buttons[0].rect.collidepoint(pygame.mouse.get_pos()):
                     InGame()
 
-                if backButton.rect.collidepoint(pygame.mouse.get_pos()):
+                if my_buttons[1].rect.collidepoint(pygame.mouse.get_pos()):
                     Intro()
                     
-                if playButton.rect.collidepoint(pygame.mouse.get_pos()):
+                if my_buttons[2].rect.collidepoint(pygame.mouse.get_pos()):
                     MODE = 'play'
 
-                if editButton.rect.collidepoint(pygame.mouse.get_pos()):
+                if my_buttons[3].rect.collidepoint(pygame.mouse.get_pos()):
                     MODE = 'edit'
                     
-                if turnButton.rect.collidepoint(pygame.mouse.get_pos()):
+                if my_buttons[4].rect.collidepoint(pygame.mouse.get_pos()):
                     game.change_turn()
+                    
+                for i in range(2):
+                    for j in range(3):
+                        if ai_buttons[i][j].rect.collidepoint(pygame.mouse.get_pos()):
+                            if i==0:
+                                gv.P1_ai = 0 if gv.P1_ai else j+2
+                            elif i==1:
+                                gv.P2_ai = 0 if gv.P2_ai else j+2
         
         blackScore, whiteScore = game.getScoreOfBoard()
         blackText = sc.text(f'BLACK: {blackScore}', gv.HELV, 25, (10, 10), gv.GREY)
