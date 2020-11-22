@@ -117,10 +117,10 @@ def InGame():
                     Intro()
                     
                 if my_buttons[2].rect.collidepoint(pygame.mouse.get_pos()):
-                    MODE = 'play'
+                    MODE = 'edit'
 
                 if my_buttons[3].rect.collidepoint(pygame.mouse.get_pos()):
-                    MODE = 'edit'
+                    MODE = 'play'
                     
                 if my_buttons[4].rect.collidepoint(pygame.mouse.get_pos()):
                     game.change_turn()

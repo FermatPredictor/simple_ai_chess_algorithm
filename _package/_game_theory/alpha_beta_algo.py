@@ -66,7 +66,7 @@ class MinimaxABAgent:
         if not key_of_actions:
             """ 處理棋局還未結束，但無棋步可走而換對手的情形(ex: 黑白棋) """
             self.state.next_turn()
-            eval_child, action_child = self._minimax(depth, is_max_turn, alpha, beta)
+            eval_child, action_child = self._minimax(depth, not is_max_turn, alpha, beta)
             self.state.next_turn()
             
             best_value, action_target  = eval_child, ""

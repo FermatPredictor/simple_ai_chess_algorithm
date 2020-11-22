@@ -158,6 +158,10 @@ class Reversi_Gmae():
         return empty_grid
     
     def ai_action(self):
-        self.game.eval_mode = 'weight' if self.__count_empty_grid()>10 else 'num'
-        AI = MinimaxABAgent(3, self.get_turn(), self.game, self.state)
+        end_mode = self.__count_empty_grid()<=12
+        self.game.eval_mode = 'weight' if not end_mode else 'num'
+        depth = 5 if not end_mode else 10
+        if end_mode:
+            print('end mode analysize...')
+        AI = MinimaxABAgent(depth, self.get_turn(), self.game, self.state)
         AI.choose_action()
