@@ -60,10 +60,16 @@ class tile(pygame.sprite.Sprite):
             self.image.blit(image, (4,4))
             
     def update(self, stone_type):
+        image = pygame.image.load("sprites/tile.png")
+        self.image.blit(image, (0,0))
         disks = {1: "sprites/b_disk.png", 2:"sprites/w_disk.png"}
         if stone_type!=0:
             image = pygame.image.load(disks[stone_type])
             self.image.blit(image, (4,4))
+            
+    def draw_hint(self):
+        center = self.image.get_size()[0]//2
+        pygame.draw.circle(self.image, (0,0,0), (center, center), center, 1) #繪製黑色邊框
     
 
 class chessBoard():
@@ -71,12 +77,14 @@ class chessBoard():
         self.tiles_group = pygame.sprite.Group()
         self.tiles = [[tile(i, j, board[i][j]) for j in range(8)] for i in range(8)]
         self.tiles_group.add(self.tiles)
-
                     
-    def update(self, board):
+    def update(self, board, hints = None):
         for i in range(8):
             for j in range(8):
                 self.tiles[i][j].update(board[i][j])
+        if hints:
+            for x,y in hints:
+                self.tiles[x][y].draw_hint()
     
     def draw(self, screen):
         self.tiles_group.draw(screen)

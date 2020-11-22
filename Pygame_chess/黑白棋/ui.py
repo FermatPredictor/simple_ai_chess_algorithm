@@ -3,10 +3,7 @@ import pygame
 import spriteclass as sc
 import reversifunc as rf
 import globalvar as gv
-import aifunc as af
 
-import math
-import time
 
 # 創建顏色(三個參數為RGB)
 GREEN = (128,255,0)
@@ -21,6 +18,7 @@ pygame.display.set_caption('Reversi')
 
 # menu screen
 def Intro():
+    gv.P1_ai, gv.P2_ai = 0, 0
     texts = pygame.sprite.Group()
     buttons = pygame.sprite.Group()
 
@@ -42,16 +40,13 @@ def Intro():
 
             if evi.type == pygame.MOUSEBUTTONDOWN:
                 if easyButton.rect.collidepoint(pygame.mouse.get_pos()):
-                    gv.diff = 2
-                    gv.aiMode = False
+                    gv.P1_ai = 2
                     InGame()
                 if normButton.rect.collidepoint(pygame.mouse.get_pos()):
-                    gv.diff = 3
-                    gv.aiMode = False
+                    gv.P1_ai = 3
                     InGame()
                 if hardButton.rect.collidepoint(pygame.mouse.get_pos()):
-                    gv.diff = 4
-                    gv.aiMode = False
+                    gv.P1_ai = 4
                     InGame()
                 if aiButton.rect.collidepoint(pygame.mouse.get_pos()):
                     AiMode()
@@ -91,9 +86,8 @@ def AiMode():
                 for i in range(3):
                     for j in range(3):
                         if my_buttons[i][j].rect.collidepoint(pygame.mouse.get_pos()):
-                            gv.aiPlay = i+2
-                            gv.diff = j+2
-                            gv.aiMode = True
+                            gv.P1_ai = i+2
+                            gv.P2_ai = j+2
                             InGame()
                 if backButton.rect.collidepoint(pygame.mouse.get_pos()):
                     Intro()
@@ -106,10 +100,6 @@ def AiMode():
 # gameplay
 def InGame():
     game = rf.Reversi_Gmae()
-    #curBoard = [['.' for x in range(8)] for y in range(8)]
-    #noMoves = 0
-    #curBoard = rf.initializeBoard(curBoard)
-   # curTurn = gv.P1
 
     texts = pygame.sprite.Group()
     buttons = pygame.sprite.Group()
@@ -121,10 +111,16 @@ def InGame():
 
     blackScore, whiteScore = 2, 2
     click_x, click_y = None, None
+    
+    def is_ai_turn():
+        return game.get_turn()==1 and gv.P1_ai or game.get_turn()==2 and gv.P2_ai
+    
     while True:
         texts.empty()
+        
         if not game.is_terminal():
-            if game.get_turn()==1 and gv.aiMode or game.get_turn()==2:
+            game.check_move() # 輪空規則
+            if is_ai_turn():
                 game.ai_action()
         else:
             if blackScore > whiteScore:
@@ -139,52 +135,17 @@ def InGame():
             texts.add(gameOverText)
             texts.add(resultText)
             
-            
-        # if not game.is_terminal():
-        #     validPos = rf.getValidMoves(curBoard, curTurn)
-        #     if len(validPos) > 0:
-        #         noMoves = 0
-        #         if curTurn == gv.P1 and gv.aiMode or curTurn == gv.P2 and gv.diff:
-        #             depth = gv.aiPlay if curTurn == gv.P1 else gv.diff
-        #             value, oppMove = af.miniMax(curBoard, depth, -math.inf, math.inf, True, curTurn)
-        #             if oppMove in validPos:
-        #                 curBoard = rf.makeMove(curBoard, curTurn, oppMove[0], oppMove[1])
-        #                 curTurn = gv.P2 if curTurn == gv.P1 else gv.P1
-        #     else:
-        #         curTurn = gv.P2 if curTurn == gv.P1 else gv.P1
-        #         noMoves += 1
-            
-        # if noMoves>0:
-        #     TEXT = 'No moves for WHITE' if curTurn == gv.P1 else 'No moves for BLACK'
-        #     noText = sc.text(TEXT, gv.HELV, 25, (730, 10), gv.GREY)
-        #     texts.add(noText)
-        
-        # if rf.getEmptyTiles(curBoard) == 0 or noMoves == 2:
-            
-        #     if blackScore > whiteScore:
-        #         result = 'BLACK WIN!'
-        #     elif blackScore < whiteScore:
-        #         result = 'WHITE WIN!'
-        #     else:
-        #         result = 'DRAW!'
-                
-        #     gameOverText = sc.text('Game OVER!', gv.HELV, 30, (10, 70), gv.BLACK)
-        #     resultText = sc.text(result, gv.NEXT, 30, (10, 100), gv.BLACK)
-        #     texts.add(gameOverText)
-        #     texts.add(resultText)
 
         for evg in pygame.event.get():
             if evg.type == pygame.QUIT:
                 pygame.display.quit()
 
             if evg.type == pygame.MOUSEBUTTONDOWN:
-                for aTile in sum(ui_board.tiles, []):
-                    if aTile.rect.collidepoint(pygame.mouse.get_pos()):  
-                        click_x, click_y = aTile.xInd, aTile.yInd
-                        game.make_move(click_x, click_y)
-                        # curBoard = rf.makeMove(curBoard, curTurn, aTile.xInd, aTile.yInd)
-                        # curTurn = gv.P2 if curTurn == gv.P1 else gv.P1
-                        # aiThink = sc.text('AI is thinking...', gv.HELV, 25, (770, 10), gv.GREY)
+                if not is_ai_turn():
+                    for aTile in sum(ui_board.tiles, []):
+                        if aTile.rect.collidepoint(pygame.mouse.get_pos()):  
+                            click_x, click_y = aTile.xInd, aTile.yInd
+                            game.make_move(click_x, click_y)
                         
                 if retryButton.rect.collidepoint(pygame.mouse.get_pos()):
                     InGame()
@@ -200,7 +161,7 @@ def InGame():
         texts.add(blackText, whiteText, clickText, next_move_text)
 
         screen.fill(gv.BROWN)
-        ui_board.update(game.get_board())
+        ui_board.update(game.get_board(), game.get_hint())
         ui_board.draw(screen)
         buttons.draw(screen)
         texts.draw(screen)

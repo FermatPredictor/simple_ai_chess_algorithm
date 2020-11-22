@@ -1,9 +1,6 @@
 # global constants are stored here
-P1 = 'x'
-P2 = 'o'
-aiMode = False #黑棋
-diff = 2
-aiPlay = 2 #白棋
+P1_ai = 0
+P2_ai = 0
 WIDTH, HEIGHT = 960, 720
 BLACK = (0,0,0)
 BROWN = (205,133,63)

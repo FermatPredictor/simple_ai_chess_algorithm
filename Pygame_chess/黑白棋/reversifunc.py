@@ -13,6 +13,9 @@ class State():
     
     def opp_color(self):
         return 3^self.playerColor
+    
+    def next_turn(self):
+        self.playerColor = self.opp_color()
 
 # the weights of board, big positive value means top priority for opponent
 weights = [[ 100, -20,  10,   5,   5,  10, -20, 100],
@@ -107,12 +110,22 @@ class Reversi_Gmae():
         valid_moves = self.game.getValidMoves(self.state)
         if (x,y) in valid_moves:
             self.game.makeMove(self.state, valid_moves[(x,y)])
+    
+    def check_move(self):
+        # 輪空規則
+        valid_moves = self.game.getValidMoves(self.state)
+        if not valid_moves:
+            self.state.next_turn()
+            
             
     def get_board(self):
         return self.state.board
     
     def get_turn(self):
         return self.state.playerColor
+    
+    def get_hint(self):
+        return set(self.game.getValidMoves(self.state))
     
     def is_terminal(self):
         return self.game.is_terminal(self.state)
@@ -128,5 +141,5 @@ class Reversi_Gmae():
         return scores[1], scores[2]
     
     def ai_action(self):
-        AI = MinimaxABAgent(3, self.get_turn(), self.game, self.state)
+        AI = MinimaxABAgent(5, self.get_turn(), self.game, self.state)
         AI.choose_action()
