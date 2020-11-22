@@ -25,29 +25,27 @@ def Intro():
     gameTitle = sc.text('REVERSI', gv.NEXT, 110, (260, 50), gv.GOLD)
     chooseDiff = sc.text('Choose Difficulty', gv.HELV, 40, (320, 300), gv.GREY)
     
-    easyButton = sc.my_button((200, 400), (150, 70), GREEN, (gv.HELV, 30, gv.BLACK, 'Easy'))
-    normButton = sc.my_button((400, 400), (150, 70), YELLOW, (gv.HELV, 30, gv.BLACK, 'Normal'))
-    hardButton = sc.my_button((600, 400), (150, 70), ORANGE, (gv.HELV, 30, gv.BLACK, 'Hard'))
-    aiButton = sc.my_button((780, 625), (150, 70), ORANGE, (gv.HELV, 30, gv.BLACK, 'AI Mode'))
+    my_buttons = [None]*3
+    color_dict = {0:GREEN, 1:YELLOW, 2:ORANGE}
+    diff_dict = {0:'Easy', 1:'Normal', 2:'Hard'}
+    for i in range(3):
+        my_buttons[i] = sc.my_button((200*(i+1), 400),(150, 70), color_dict[i], (gv.HELV, 30, BLACK, f'{diff_dict[i]}'))
+        buttons.add(my_buttons[i])
+    
+    aiButton = sc.my_button((780, 625), (150, 70), ORANGE, (gv.HELV, 30, BLACK, 'AI Mode'))
 
     texts.add(gameTitle, chooseDiff)
-    buttons.add(easyButton, normButton, hardButton, aiButton)
+    buttons.add(aiButton)
 
     while True:
         for evi in pygame.event.get():
             if evi.type == pygame.QUIT:
                 pygame.display.quit()
-
             if evi.type == pygame.MOUSEBUTTONDOWN:
-                if easyButton.rect.collidepoint(pygame.mouse.get_pos()):
-                    gv.P1_ai = 2
-                    InGame()
-                if normButton.rect.collidepoint(pygame.mouse.get_pos()):
-                    gv.P1_ai = 3
-                    InGame()
-                if hardButton.rect.collidepoint(pygame.mouse.get_pos()):
-                    gv.P1_ai = 4
-                    InGame()
+                for i in range(3):
+                    if my_buttons[i].rect.collidepoint(pygame.mouse.get_pos()):
+                        gv.P1_ai = i+2
+                        InGame()
                 if aiButton.rect.collidepoint(pygame.mouse.get_pos()):
                     AiMode()
 
@@ -70,9 +68,9 @@ def AiMode():
     diff_dict = {0:'E', 1:'N', 2:'H'}
     for i in range(3):
         for j in range(3):
-            my_buttons[i][j] = sc.my_button(coord(j, i),(150, 70), color_dict[i], (gv.HELV, 30, gv.BLACK, f'{diff_dict[i]} v {diff_dict[j]}'))
+            my_buttons[i][j] = sc.my_button(coord(j, i),(150, 70), color_dict[i], (gv.HELV, 30, BLACK, f'{diff_dict[i]} v {diff_dict[j]}'))
             buttons.add(my_buttons[i][j])
-    backButton = sc.my_button((780, 625),(150, 70), ORANGE, (gv.HELV, 30, gv.BLACK, 'Back'))
+    backButton = sc.my_button((780, 625),(150, 70), ORANGE, (gv.HELV, 30, BLACK, 'Back'))
 
     texts.add(aiTitle)
     buttons.add(backButton)
@@ -105,12 +103,14 @@ def InGame():
     buttons = pygame.sprite.Group()
     ui_board = sc.chessBoard(game.get_board())
     
-    retryButton = sc.my_button((800, 100), (150, 70), YELLOW, (gv.HELV, 35, gv.BLACK, 'Retry'))
-    backButton = sc.my_button((800, 190), (150, 70), ORANGE, (gv.HELV, 35, gv.BLACK, 'Back'))
+    retryButton = sc.my_button((800, 100), (150, 70), YELLOW, (gv.HELV, 35, BLACK, 'Retry'))
+    backButton = sc.my_button((800, 190), (150, 70), ORANGE, (gv.HELV, 35, BLACK, 'Back'))
     buttons.add(retryButton, backButton)
 
     blackScore, whiteScore = 2, 2
     click_x, click_y = None, None
+    
+    MODE = 'play'
     
     def is_ai_turn():
         return game.get_turn()==1 and gv.P1_ai or game.get_turn()==2 and gv.P2_ai
@@ -118,22 +118,23 @@ def InGame():
     while True:
         texts.empty()
         
-        if not game.is_terminal():
-            game.check_move() # 輪空規則
-            if is_ai_turn():
-                game.ai_action()
-        else:
-            if blackScore > whiteScore:
-                result = 'BLACK WIN!'
-            elif blackScore < whiteScore:
-                result = 'WHITE WIN!'
+        if MODE == 'play':
+            if not game.is_terminal():
+                game.check_move() # 輪空規則
+                if is_ai_turn():
+                    game.ai_action()
             else:
-                result = 'DRAW!'
-                
-            gameOverText = sc.text('Game OVER!', gv.HELV, 30, (10, 70), gv.BLACK)
-            resultText = sc.text(result, gv.NEXT, 30, (10, 100), gv.BLACK)
-            texts.add(gameOverText)
-            texts.add(resultText)
+                if blackScore > whiteScore:
+                    result = 'BLACK WIN!'
+                elif blackScore < whiteScore:
+                    result = 'WHITE WIN!'
+                else:
+                    result = 'DRAW!'
+                    
+                gameOverText = sc.text('Game OVER!', gv.HELV, 30, (10, 70), BLACK)
+                resultText = sc.text(result, gv.NEXT, 30, (10, 100), BLACK)
+                texts.add(gameOverText)
+                texts.add(resultText)
             
 
         for evg in pygame.event.get():
@@ -141,10 +142,12 @@ def InGame():
                 pygame.display.quit()
 
             if evg.type == pygame.MOUSEBUTTONDOWN:
-                if not is_ai_turn():
-                    for aTile in sum(ui_board.tiles, []):
-                        if aTile.rect.collidepoint(pygame.mouse.get_pos()):  
-                            click_x, click_y = aTile.xInd, aTile.yInd
+                for aTile in sum(ui_board.tiles, []):
+                    if aTile.rect.collidepoint(pygame.mouse.get_pos()):
+                        click_x, click_y = aTile.xInd, aTile.yInd
+                        if MODE == 'edit':
+                            game.set_board(click_x, click_y)
+                        if MODE == 'play' and not is_ai_turn(): 
                             game.make_move(click_x, click_y)
                         
                 if retryButton.rect.collidepoint(pygame.mouse.get_pos()):

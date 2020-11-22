@@ -1,6 +1,9 @@
 import random
 import globalvar as gv
-from aifunc import MinimaxABAgent
+
+import sys
+sys.path.append('../..') # 添加相對路徑上兩層到sys.path，讓程式找到的模組_package
+from _package._game_theory.alpha_beta_algo import MinimaxABAgent
 
 class State():
     """ 
@@ -117,6 +120,8 @@ class Reversi_Gmae():
         if not valid_moves:
             self.state.next_turn()
             
+    def set_board(self, x, y):
+        self.state.board[x][y] = (self.state.board[x][y]+1)%3
             
     def get_board(self):
         return self.state.board
@@ -141,5 +146,5 @@ class Reversi_Gmae():
         return scores[1], scores[2]
     
     def ai_action(self):
-        AI = MinimaxABAgent(5, self.get_turn(), self.game, self.state)
+        AI = MinimaxABAgent(3, self.get_turn(), self.game, self.state)
         AI.choose_action()
