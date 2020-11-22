@@ -64,14 +64,14 @@ class Reversi():
     def makeMove(self, state, action_key):
         for x, y in action_key:
             state.board[x][y] = state.playerColor
-        state.playerColor = state.opp_color()
+        state.next_turn()
             
     def unMakeMove(self, state, action_key):
         place_x, place_y = action_key[0]
         state.board[place_x][place_y] = 0
         for x, y in action_key[1:]:
             state.board[x][y] = state.playerColor
-        state.playerColor = state.opp_color()
+        state.next_turn()
 
 
     def getValidMoves(self, state):
@@ -91,13 +91,13 @@ class Reversi():
         return score
     
     def is_terminal(self, state):
+        terminal = False
         if not self.getValidMoves(state):
-            state.playerColor = state.opp_color()
+            state.next_turn()
             if not self.getValidMoves(state):
-                state.playerColor = state.opp_color()
-                return True
-            state.playerColor = state.opp_color()
-        return False
+                terminal = True
+            state.next_turn()
+        return terminal
     
 
 class Reversi_Gmae():
