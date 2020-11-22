@@ -5,11 +5,7 @@ import reversifunc as rf
 import globalvar as gv
 
 
-# 創建顏色(三個參數為RGB)
-GREEN = (128,255,0)
-BLACK = (0,0,0)
-YELLOW = (255,225,0)
-ORANGE = (255,135,0)
+
 
 pygame.init()
 
@@ -26,13 +22,13 @@ def Intro():
     chooseDiff = sc.text('Choose Difficulty', gv.HELV, 40, (320, 300), gv.GREY)
     
     my_buttons = [None]*3
-    color_dict = {0:GREEN, 1:YELLOW, 2:ORANGE}
+    color_dict = {0:gv.GREEN, 1:gv.YELLOW, 2:gv.ORANGE}
     diff_dict = {0:'Easy', 1:'Normal', 2:'Hard'}
     for i in range(3):
-        my_buttons[i] = sc.my_button((200*(i+1), 400),(150, 70), color_dict[i], (gv.HELV, 30, BLACK, f'{diff_dict[i]}'))
+        my_buttons[i] = sc.my_button((200*(i+1), 400),(150, 70), color_dict[i], (gv.HELV, 30, gv.BLACK, f'{diff_dict[i]}'))
         buttons.add(my_buttons[i])
     
-    aiButton = sc.my_button((780, 625), (150, 70), ORANGE, (gv.HELV, 30, BLACK, 'AI Mode'))
+    aiButton = sc.my_button((780, 625), (150, 70), gv.ORANGE, (gv.HELV, 30, gv.BLACK, 'AI Mode'))
 
     texts.add(gameTitle, chooseDiff)
     buttons.add(aiButton)
@@ -64,13 +60,13 @@ def AiMode():
         return (200+200*X, 200+125*Y)
     
     my_buttons = [[None]*3 for _ in range(3)]
-    color_dict = {0:GREEN, 1:YELLOW, 2:ORANGE}
+    color_dict = {0:gv.GREEN, 1:gv.YELLOW, 2:gv.ORANGE}
     diff_dict = {0:'E', 1:'N', 2:'H'}
     for i in range(3):
         for j in range(3):
-            my_buttons[i][j] = sc.my_button(coord(j, i),(150, 70), color_dict[i], (gv.HELV, 30, BLACK, f'{diff_dict[i]} v {diff_dict[j]}'))
+            my_buttons[i][j] = sc.my_button(coord(j, i),(150, 70), color_dict[i], (gv.HELV, 30, gv.BLACK, f'{diff_dict[i]} v {diff_dict[j]}'))
             buttons.add(my_buttons[i][j])
-    backButton = sc.my_button((780, 625),(150, 70), ORANGE, (gv.HELV, 30, BLACK, 'Back'))
+    backButton = sc.my_button((780, 625),(150, 70), gv.ORANGE, (gv.HELV, 30, gv.BLACK, 'Back'))
 
     texts.add(aiTitle)
     buttons.add(backButton)
@@ -103,9 +99,12 @@ def InGame():
     buttons = pygame.sprite.Group()
     ui_board = sc.chessBoard(game.get_board())
     
-    retryButton = sc.my_button((800, 100), (150, 70), YELLOW, (gv.HELV, 35, BLACK, 'Retry'))
-    backButton = sc.my_button((800, 190), (150, 70), ORANGE, (gv.HELV, 35, BLACK, 'Back'))
-    buttons.add(retryButton, backButton)
+    retryButton = sc.my_button((800, 100), (150, 70), gv.YELLOW, (gv.HELV, 35, gv.BLACK, 'Retry'))
+    backButton = sc.my_button((800, 190), (150, 70), gv.ORANGE, (gv.HELV, 35, gv.BLACK, 'Back'))
+    editButton = sc.my_button((800, 280), (150, 70), gv.YELLOW, (gv.HELV, 35, gv.BLACK, 'Edit'))
+    playButton = sc.my_button((800, 370), (150, 70), gv.ORANGE, (gv.HELV, 35, gv.BLACK, 'Play'))
+    turnButton = sc.my_button((800, 460), (150, 70), gv.GREEN, (gv.HELV, 22, gv.BLACK, 'ChangeTurn'))
+    buttons.add(retryButton, backButton, playButton, editButton, turnButton)
 
     blackScore, whiteScore = 2, 2
     click_x, click_y = None, None
@@ -131,10 +130,9 @@ def InGame():
                 else:
                     result = 'DRAW!'
                     
-                gameOverText = sc.text('Game OVER!', gv.HELV, 30, (10, 70), BLACK)
-                resultText = sc.text(result, gv.NEXT, 30, (10, 100), BLACK)
-                texts.add(gameOverText)
-                texts.add(resultText)
+                gameOverText = sc.text('Game OVER!', gv.HELV, 30, (10, 70), gv.BLACK)
+                resultText = sc.text(result, gv.NEXT, 30, (10, 100), gv.BLACK)
+                texts.add(gameOverText, resultText)
             
 
         for evg in pygame.event.get():
@@ -155,13 +153,25 @@ def InGame():
 
                 if backButton.rect.collidepoint(pygame.mouse.get_pos()):
                     Intro()
+                    
+                if playButton.rect.collidepoint(pygame.mouse.get_pos()):
+                    MODE = 'play'
+
+                if editButton.rect.collidepoint(pygame.mouse.get_pos()):
+                    MODE = 'edit'
+                    
+                if turnButton.rect.collidepoint(pygame.mouse.get_pos()):
+                    game.change_turn()
         
         blackScore, whiteScore = game.getScoreOfBoard()
         blackText = sc.text(f'BLACK: {blackScore}', gv.HELV, 25, (10, 10), gv.GREY)
         whiteText = sc.text(f'WHITE: {whiteScore}', gv.HELV, 25, (10, 40), gv.GREY)
         clickText = sc.text(f'x: {click_x}, y: {click_y}', gv.HELV, 25, (10, 200), gv.GREY)
         next_move_text = sc.text(f"next: {'black' if game.get_turn()==1 else 'white'}", gv.HELV, 25, (10, 250), gv.GREY)
-        texts.add(blackText, whiteText, clickText, next_move_text)
+        mode_text = sc.text(f"game mode: {MODE}", gv.HELV, 25, (10, 300), gv.GREY)
+        ai_p1_text = sc.text(f"ai_P1: {'on' if gv.P1_ai else 'off'}", gv.HELV, 25, (10, 350), gv.GREY)
+        ai_p2_text = sc.text(f"ai_P2: {'on' if gv.P2_ai else 'off'}", gv.HELV, 25, (10, 400), gv.GREY)
+        texts.add(blackText, whiteText, clickText, next_move_text, mode_text, ai_p1_text, ai_p2_text)
 
         screen.fill(gv.BROWN)
         ui_board.update(game.get_board(), game.get_hint())

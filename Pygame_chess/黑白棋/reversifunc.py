@@ -120,6 +120,9 @@ class Reversi_Gmae():
         if not valid_moves:
             self.state.next_turn()
             
+    def change_turn(self):
+        self.state.next_turn()
+            
     def set_board(self, x, y):
         self.state.board[x][y] = (self.state.board[x][y]+1)%3
             
