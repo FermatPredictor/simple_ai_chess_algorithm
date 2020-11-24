@@ -76,12 +76,13 @@ class tile(pygame.sprite.Sprite):
 class chessBoard():
     def __init__(self, board):
         self.tiles_group = pygame.sprite.Group()
-        self.tiles = [[tile(i, j, board[i][j]) for j in range(8)] for i in range(8)]
+        self.width, self.height = len(board[0]), len(board)
+        self.tiles = [[tile(i, j, board[i][j]) for j in range(self.width)] for i in range(self.height)]
         self.tiles_group.add(self.tiles)
                     
     def update(self, board, hints = None):
-        for i in range(8):
-            for j in range(8):
+        for i in range(self.height):
+            for j in range(self.width):
                 self.tiles[i][j].update(board[i][j])
         if hints:
             for x,y in hints:

@@ -42,9 +42,15 @@ def Intro():
         pygame.display.update()
 
 
-# gameplay
+
+"""
+棋盤座標有兩種表示法:
+row_column and x_y，
+下棋邏輯統一用row_column，
+ui_board統一用x,y座標
+"""
 def InGame():
-    game = rf.Reversi_Gmae()
+    game = rf.Reversi_Gmae(8, 8)
 
     texts = pygame.sprite.Group()
     buttons = pygame.sprite.Group()

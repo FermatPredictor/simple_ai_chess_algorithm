@@ -20,16 +20,6 @@ class State():
     def next_turn(self):
         self.playerColor = self.opp_color()
 
-# the weights of board, big positive value means top priority for opponent
-weights = [[ 100, -20,  10,   5,   5,  10, -20, 100],
-           [ -20, -50,  -2,  -2,  -2,  -2, -50, -20],
-           [  10,  -2,   1,   1,   1,   1,  -2,  10],
-           [   5,  -2,   1,   1,   1,   1,  -2,   5],
-           [   5,  -2,   1,   1,   1,   1,  -2,   5],
-           [  10,  -2,   1,   1,   1,   1,  -2,  10],
-           [ -20, -50,  -2,  -2,  -2,  -2, -50, -20],
-           [ 100, -20,  10,   5,   5,  10, -20, 100]]
-
 
 class Reversi():
     def __init__(self, height, width):
@@ -38,7 +28,7 @@ class Reversi():
         self.eval_mode = 'weight'
     
     def isOnBoard(self, x, y):
-        return 0 <= x < self.width and 0 <= y < self.height
+        return 0 <= x < self.height and 0 <= y < self.width
 
     #檢查tile放在某個座標是否為合法棋步，如果是則回傳翻轉的對手棋子
     def isValidMove(self, state, xstart, ystart):
@@ -76,18 +66,53 @@ class Reversi():
 
 
     def getValidMoves(self, state):
-        moves = {(x, y):self.isValidMove(state, x,y) for x in range(self.width) for y in range(self.height)}
+        moves = {(x, y):self.isValidMove(state, x,y) for x in range(self.height) for y in range(self.width)}
         return {k:v for k,v in moves.items() if v}
     
+    def __spiral_coords(self, board, r1, c1, r2, c2, weights):
+        """
+        遍歷矩陣之外圈，
+        並將角、C位、邊設權重
+        """
+        def Pos(r,c):
+            if r in [r1+1, r2-1] or c in [c1+1,c2-1]:
+                return 1
+            return 2
+                
+        for c in range(c1, c2 + 1):
+            board[r1][c] = weights[Pos(r1,c)]
+        for r in range(r1 + 1, r2 + 1):
+            board[r][c2] = weights[Pos(r,c2)]
+        for c in range(c2 - 1, c1, -1):
+            board[r2][c] = weights[Pos(r2,c)]
+        for r in range(r2, r1, -1):
+            board[r][c1] = weights[Pos(r,c1)]
+        board[r1][c1], board[r1][c2], board[r2][c1], board[r2][c2] = [weights[0]]*4
+    
+    def __get_weight_board(self):
+        """
+        這邊手動調整格子對應的權重分配，
+        對應「角、C位、邊、星位、中央邊、中央」
+        """
+        if self.width<6 and self.height<6:
+            # 棋盤過小，直接數棋子數
+            return [[1]*self.width for _ in range(self.height)]
+            
+        weights = [100,-10,20,-50,-2, 1]
+        w_board = [[weights[5]]*self.width for _ in range(self.height)]
+        self.__spiral_coords(w_board, 0,0,self.height-1, self.width-1, weights[:3])
+        self.__spiral_coords(w_board, 1,1,self.height-2, self.width-2, weights[3:5]+[weights[4]])
+        return w_board
         
     def evaluation_function(self, state, tile):
         score, opp = 0, 3^tile
-        for x in range(8):
-            for y in range(8):
+        w_board = self.__get_weight_board()
+        for x in range(self.height):
+            for y in range(self.width):
                 if state.board[x][y] == tile:
-                    score += weights[x][y] if self.eval_mode == 'weight' else 1
+                    score += w_board[x][y] if self.eval_mode == 'weight' else 1
                 elif state.board[x][y] == opp:
-                    score -= weights[x][y] if self.eval_mode == 'weight' else 1
+                    score -= w_board[x][y] if self.eval_mode == 'weight' else 1
         return score
         
     
@@ -102,12 +127,13 @@ class Reversi():
     
 
 class Reversi_Gmae():
-    def __init__(self):
-        self.game = Reversi(8,8)
-        self.width, self.height = 8,8
-        board = [[0]*8 for _ in range(8)]
-        board[3][3], board[3][4] = 2, 1
-        board[4][3], board[4][4] = 1, 2
+    def __init__(self, height, width):
+        self.game = Reversi(height, width)
+        self.height, self.width = height, width
+        board = [[0]*width for _ in range(height)]
+        H, W = height//2, width//2
+        board[H-1][W-1], board[H-1][W] = 2, 1
+        board[H][W-1], board[H][W] = 1, 2
         self.state = State(board, 1)
         
     def make_move(self, x, y):
@@ -142,18 +168,18 @@ class Reversi_Gmae():
     # 計算當前比分
     def getScoreOfBoard(self)-> dict:
         scores = {1:0, 2:0}
-        for x in range(self.width):
-            for y in range(self.height):
-                tile = self.state.board[y][x]
+        for x in range(self.height):
+            for y in range(self.width):
+                tile = self.state.board[x][y]
                 if tile in scores:
                     scores[tile] += 1
         return scores[1], scores[2]
     
     def __count_empty_grid(self):
         empty_grid = 0
-        for x in range(self.width):
-            for y in range(self.height):
-                if self.state.board[y][x]==0:
+        for x in range(self.height):
+            for y in range(self.width):
+                if self.state.board[x][y]==0:
                     empty_grid += 1
         return empty_grid
     
