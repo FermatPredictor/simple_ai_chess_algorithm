@@ -38,19 +38,15 @@ class Reversi():
         tilesToFlip = []
         dirs = [[0, 1], [1, 1], [1, 0], [1, -1], [0, -1], [-1, -1], [-1, 0], [-1, 1]] # 定義八個方向
         for xdir, ydir in dirs:
-            x, y = xstart+xdir, ystart+ydir
+            x, y, flips = xstart+xdir, ystart+ydir, 0
             while self.isOnBoard(x, y) and state.board[x][y] == opp_tile:
-                x, y = x+xdir, y+ydir
-                # 夾到對手的棋子了，回頭記錄被翻轉的對手棋子
-                if self.isOnBoard(x, y) and state.board[x][y] == tile:
-                    x, y = x-xdir, y-ydir
-                    while not (x == xstart and y == ystart):
-                        tilesToFlip.append([x, y])
-                        x, y = x-xdir, y-ydir
+                tilesToFlip.append([x,y])
+                x, y, flips = x+xdir, y+ydir, flips+1
+            if flips>0 and not(self.isOnBoard(x, y) and state.board[x][y] == tile):
+                tilesToFlip = tilesToFlip[:-flips] # 沒夾到對手的棋子，抹去記錄
         if tilesToFlip:
             return [[xstart, ystart]] + tilesToFlip
         return False
-
 
     def makeMove(self, state, action_key):
         for x, y in action_key:
