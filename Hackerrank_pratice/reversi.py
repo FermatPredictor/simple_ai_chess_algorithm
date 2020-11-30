@@ -1,8 +1,5 @@
-import numpy as np
-from collections import defaultdict
-from copy import deepcopy
-from pprint import pprint
 import time
+import random
 
 class ReversiState():
     """ 
@@ -13,7 +10,7 @@ class ReversiState():
         self.height, self.width = len(board), len(board[0])
         self.playerColor = playerColor
         self.eval_mode = 'weight'
-        self.pass_info = 0 # 0:無pass, 1:黑pass, 2:白pass, 3:黑白均pass，此時game over 
+        self.pass_info = False
         self.w_board = self.__get_weight_board()
         
     def isOnBoard(self, r, c):
@@ -44,7 +41,7 @@ class ReversiState():
                 self.board[r][c] = self.playerColor
             self.pass_info = 0
         else:
-            self.pass_info = self.pass_info | self.playerColor
+            self.pass_info = True
         self.next_turn()
             
     def unMakeMove(self, action_key):
@@ -110,145 +107,118 @@ class ReversiState():
             for c in range(self.width):
                 score += (self.w_board[r][c] if self.eval_mode == 'weight' else 1)* coef[self.board[r][c]]
         return score
-    
-    def winner(self, tile):
-        score, opp = 0, tile^3
-        coef = {0:0, tile: 1, opp:-1} 
-        for r in range(self.height):
-            for c in range(self.width):
-                score += 1* coef[self.board[r][c]]
-        if score>0:
-            return 1
-        if score<0:
-            return -1
-        return 0        
+        
     
     def is_terminal(self):
-        return self.pass_info == 3
+        return self.pass_info
 
-class MonteCarloTreeSearchNode(object):
+""" ref: https://www.mygreatlearning.com/blog/alpha-beta-pruning-in-ai/ """
+class MinimaxABAgent:
     """
-    MonteCarloTreeSearch 演算法模版，
+    alpha beta 演算法模版，
     用途是只要定義好遊戲規則，
     ai就會透過此演算法計算最佳行動(棋步)
     
     必要定義的物件:
     * state: 類似指標可以inplace修改的物件
        - def getValidMoves(self): 回傳一個字典，key值是行動，value是一個action_key，用來走棋或還原state
+       - def evaluation_function(self, player_color): 回傳此盤面對「player_color」來說的分數，盤面愈好分數愈高
        - def is_terminal(self): 判斷一場遊戲是否已經結束
        - def makeMove(self, action_key): 自定義action_key行動
        - def unMakeMove(self, action_key): 此函數的用意是state可以還原，就只需創建一次，避免需要大量複製state而耗時
     """
-    def __init__(self, state, parent=None):
-        self._number_of_visits = 0.
-        self._results = defaultdict(int) #1:win, -1:lose, 0: draw
-        self.state = state
-        self.parent = parent
-        self.children = []
-
-    @property
-    def untried_actions(self):
-        if not hasattr(self, '_untried_actions'):
-            self._untried_actions = list(self.state.getValidMoves().values())
-        return self._untried_actions
-
-    @property
-    def q(self):
-        wins, loses = self._results[1], self._results[-1]
-        return wins - loses
-
-    @property
-    def n(self):
-        return self._number_of_visits
-
-    def expand(self):
-        action = self.untried_actions.pop()
-        cur_state = deepcopy(self.state)
-        cur_state.makeMove(action)
-        child_node = MonteCarloTreeSearchNode(cur_state, parent=self)
-        self.children.append(child_node)
-        return child_node
-
-    def is_terminal_node(self):
-        return self.state.is_terminal()
-
-    def rollout(self):
-        player_color = self.state.playerColor
-        cur_state = deepcopy(self.state)
-        while not cur_state.is_terminal():
-            possible_moves = list(cur_state.getValidMoves().values())
-            action = self.rollout_policy(possible_moves)
-            cur_state.makeMove(action)
-        return cur_state.winner(player_color)
-
-    def backpropagate(self, result):
-        self._number_of_visits += 1.
-        self._results[result] += 1.
-        if self.parent:
-            self.parent.backpropagate(result)
-
-    def is_fully_expanded(self):
-        return not self.untried_actions
-
-    def best_child(self, c_param=1.4):
-        choices_weights = [
-            (c.q / (c.n)) + c_param * np.sqrt((2 * np.log(self.n) / (c.n)))
-            for c in self.children
-        ]
-        return self.children[np.argmax(choices_weights)]
-
-    def rollout_policy(self, possible_moves):
-        return possible_moves[np.random.randint(len(possible_moves))]
     
-class MonteCarloTreeSearch:
-    def __init__(self, node: MonteCarloTreeSearchNode):
-        self.root = node
-
-    def best_action(self, simulations_number):
+    def __init__(self, max_depth, player_color, state):
+        """
+        Initiation
+        Parameters
+        ----------
+        max_depth : int
+            The max depth of the tree
+        player_color : int(usually 1 or 2, 0 for empty grid)
+            The player's index as MAX in minimax algorithm
+        """
+        self.max_depth = max_depth
+        self.player_color = player_color
+        self.state = state
+        self.node_expanded = 0
+ 
+    def choose_action(self):
+        """ 回傳 action """
+        self.node_expanded = 0
+ 
         start_time = time.time()
-        for _ in range(simulations_number):
-            v = self.tree_policy()
-            reward = v.rollout()
-            v.backpropagate(reward)
+ 
+        #print("MINIMAX AB : Wait AI is choosing")
+        list_action = self.state.getValidMoves()
+        eval_score, selected_key_action = self._minimax(0,True,float('-inf'),float('inf'))
+        #print(f"MINIMAX : Done, eval = {eval_score}, expanded {self.node_expanded} nodes")
         eval_time = max(0.00001, time.time() - start_time)
-        print(f"--- {eval_time} seconds ---, avg: {simulations_number/eval_time} (explode_node per seconds)")
-        # exploitation only
-        return self.root.best_child(c_param=0.)
+        #print(f"--- {eval_time} seconds ---, avg: {self.node_expanded/eval_time} (explode_node per seconds)")
+        #print(f'The best move is {selected_key_action}')
+        self.state.makeMove(list_action[selected_key_action])
+        return selected_key_action
+ 
+    def _minimax(self, current_depth, is_max_turn, alpha, beta):
+        
+        self.node_expanded += 1
+ 
+        if current_depth == self.max_depth or self.state.is_terminal():
+            return self.state.evaluation_function(self.player_color), ""
+ 
+        possible_action = self.state.getValidMoves()
+        key_of_actions = list(possible_action.keys())
+        
+        """ 若為pass或是單行道的情形，深度往後搜一層 """
+        depth = current_depth if len(key_of_actions)<=1 else current_depth+1            
+ 
+        random.shuffle(key_of_actions) #randomness
+        best_value = float('-inf') if is_max_turn else float('inf')
+        action_target = ""
+        
+        for action_key in key_of_actions:
+            
+            self.state.makeMove(possible_action[action_key])
+            eval_child, action_child = self._minimax(depth, not is_max_turn, alpha, beta)
+            self.state.unMakeMove(possible_action[action_key])
+            
+            max_condition = is_max_turn and best_value < eval_child
+            min_condition = (not is_max_turn) and best_value > eval_child
+            
+            if max_condition or min_condition:
+                best_value, action_target  = eval_child, action_key 
+                
+                if max_condition:
+                    alpha = max(alpha, best_value)
+                else:
+                    beta = min(beta, best_value)
+                    
+                if beta <= alpha:       
+                    break
 
-    def tree_policy(self):
-        current_node = self.root
-        while not current_node.is_terminal_node():
-            if not current_node.is_fully_expanded():
-                return current_node.expand()
-            else:
-                current_node = current_node.best_child()
-        return current_node
+        return best_value, action_target
+
+def count_empty_grid(board):
+    empty_grid = 0
+    for x in range(len(board)):
+        for y in range(len(board[0])):
+            if board[x][y]==0:
+                empty_grid += 1
+    return empty_grid
     
 if __name__=='__main__':
     """
-    黑白棋套用alpha-beta算法
-    平均每秒可搜索10000個節點以上
+    https://www.hackerrank.com/challenges/reversi/problem
+    需注意此規則跟普通黑白棋規則不同，
+    沒有輪空，而是只要有一方沒棋走就直接比分數了
     """
-    play_color = 1
-    board = [[0,0,0,0,0,0,0,0],
-              [0,0,0,0,0,0,0,0],
-              [0,0,0,1,0,0,0,0],
-              [0,0,2,2,2,2,0,0],
-              [0,0,0,1,2,0,0,0],
-              [0,0,0,0,0,0,0,0],
-              [0,0,0,0,0,0,0,0],
-              [0,0,0,0,0,0,0,0]]
-    """
-    board = [[2,2,2,2,2,2,2,2],
-             [1,1,1,1,2,1,2,2],
-             [1,1,2,2,2,2,1,2],
-             [0,1,1,2,2,1,2,2],
-             [0,1,1,2,1,2,2,2],
-             [1,1,2,2,2,2,2,2],
-             [1,1,1,1,1,2,0,2],
-             [2,2,2,2,2,2,0,0]]
-    """
+    s = input()
+    play_color = 1 if s=='B' else 2
+    board = [list(map(int, (input().replace('-','0').replace('B','1').replace('W','2')))) for _ in range(8)]
+    
+    end_mode = count_empty_grid(board)<=12
+    depth = 5 if not end_mode else 8
     state = ReversiState(board, play_color)
-    AI = MonteCarloTreeSearch(MonteCarloTreeSearchNode(state))
-    result = AI.best_action(100)
-    pprint(result.state.board)
+    AI = MinimaxABAgent(depth, play_color, state)
+    result = AI.choose_action()
+    print(*result)
