@@ -109,7 +109,7 @@ class ReversiState():
         coef = {0:0, tile: 1, opp:-1} 
         for r in range(self.height):
             for c in range(self.width):
-                score += self.w_board[r][c]* coef[self.board[r][c]] if self.eval_mode == 'weight' else 1
+                score += (self.w_board[r][c] if self.eval_mode == 'weight' else 1)* coef[self.board[r][c]]
         return score
         
     
@@ -119,7 +119,7 @@ class ReversiState():
 if __name__=='__main__':
     """
     黑白棋套用alpha-beta算法
-    平均每秒可搜索7000~10000個節點不等
+    平均每秒可搜索10000個節點以上
     """
     play_color = 1
     board = [[0,0,0,0,0,0,0,0],

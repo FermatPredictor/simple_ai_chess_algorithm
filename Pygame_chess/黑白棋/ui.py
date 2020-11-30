@@ -50,7 +50,7 @@ row_column and x_y，
 ui_board統一用x,y座標
 """
 def InGame():
-    game = rf.Reversi_Gmae(8, 8)
+    game = rf.Reversi_Game(8, 8)
 
     texts = pygame.sprite.Group()
     buttons = pygame.sprite.Group()
