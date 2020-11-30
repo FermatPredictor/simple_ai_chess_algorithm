@@ -1,69 +1,70 @@
-import random
-import globalvar as gv
-
 import sys
 sys.path.append('../..') # 添加相對路徑上兩層到sys.path，讓程式找到的模組_package
 from _package._game_theory.alpha_beta_algo import MinimaxABAgent
 
-class State():
+class ReversiState():
     """ 
-    記錄棋盤資訊，及下一步換誰下
-    player_color : int(usually 1 or 2, 0 for empty grid)
+    player_color : int(usually 1 or 2, 0 for empty grid), 下一步換誰下
     """
     def __init__(self, board, playerColor):
         self.board = board
+        self.height, self.width = len(board), len(board[0])
         self.playerColor = playerColor
+        self.eval_mode = 'weight'
+        self.pass_info = 0 # 0:無pass, 1:黑pass, 2:白pass, 3:黑白均pass，此時game over 
+        self.w_board = self.__get_weight_board()
+        
+    def isOnBoard(self, r, c):
+        return 0 <= r < self.height and 0 <= c < self.width
+    
+    #檢查tile放在某個座標是否為合法棋步，如果是則回傳翻轉的對手棋子
+    def isValidMove(self, r, c):
+        if not self.isOnBoard(r,c) or self.board[r][c]!=0:
+            return False
+        tile, opp_tile = self.playerColor , self.opp_color()
+        tilesToFlip = []
+        dirs = [[0, 1], [1, 1], [1, 0], [1, -1], [0, -1], [-1, -1], [-1, 0], [-1, 1]] # 定義八個方向
+        for dr, dc in dirs:
+            _r, _c, flip = r+dr, c+dc, 0
+            while self.isOnBoard(_r, _c) and self.board[_r][_c] == opp_tile:
+                tilesToFlip.append([_r, _c])
+                _r, _c, flip = _r+dr, _c+dc, flip+1
+            if flip>0 and not(self.isOnBoard(_r, _c) and self.board[_r][_c] == tile):
+                tilesToFlip = tilesToFlip[:-flip] # 沒夾到對手的棋子，抹去記錄
+        if tilesToFlip:
+            return [[r, c]] + tilesToFlip
+        return False
+    
+    def makeMove(self, action_key):
+        key, pass_info = action_key
+        if key != 'PASS':
+            for r, c in key:
+                self.board[r][c] = self.playerColor
+            self.pass_info = 0
+        else:
+            self.pass_info = self.pass_info | self.playerColor
+        self.next_turn()
+            
+    def unMakeMove(self, action_key):
+        key, pass_info = action_key
+        self.pass_info = pass_info
+        if key != 'PASS':
+            _r, _c = key[0]
+            self.board[_r][_c] = 0
+            for r, c in key[1:]:
+                self.board[r][c] = self.playerColor
+        self.next_turn()
+
+    def getValidMoves(self):
+        moves = {(x, y):self.isValidMove(x,y) for x in range(self.height) for y in range(self.width)}
+        move_fliter = {k:(v, self.pass_info) for k,v in moves.items() if v}
+        return move_fliter if move_fliter else {'PASS': ('PASS', self.pass_info)}
     
     def opp_color(self):
         return 3^self.playerColor
     
     def next_turn(self):
         self.playerColor = self.opp_color()
-
-
-class Reversi():
-    def __init__(self, height, width):
-        self.width = width
-        self.height = height
-        self.eval_mode = 'weight'
-    
-    def isOnBoard(self, x, y):
-        return 0 <= x < self.height and 0 <= y < self.width
-
-    #檢查tile放在某個座標是否為合法棋步，如果是則回傳翻轉的對手棋子
-    def isValidMove(self, state, xstart, ystart):
-        if not self.isOnBoard(xstart, ystart) or state.board[xstart][ystart]!=0:
-            return False
-        tile, opp_tile = state.playerColor , state.opp_color()
-        tilesToFlip = []
-        dirs = [[0, 1], [1, 1], [1, 0], [1, -1], [0, -1], [-1, -1], [-1, 0], [-1, 1]] # 定義八個方向
-        for xdir, ydir in dirs:
-            x, y, flips = xstart+xdir, ystart+ydir, 0
-            while self.isOnBoard(x, y) and state.board[x][y] == opp_tile:
-                tilesToFlip.append([x,y])
-                x, y, flips = x+xdir, y+ydir, flips+1
-            if flips>0 and not(self.isOnBoard(x, y) and state.board[x][y] == tile):
-                tilesToFlip = tilesToFlip[:-flips] # 沒夾到對手的棋子，抹去記錄
-        if tilesToFlip:
-            return [[xstart, ystart]] + tilesToFlip
-        return False
-
-    def makeMove(self, state, action_key):
-        for x, y in action_key:
-            state.board[x][y] = state.playerColor
-        state.next_turn()
-            
-    def unMakeMove(self, state, action_key):
-        place_x, place_y = action_key[0]
-        state.board[place_x][place_y] = 0
-        for x, y in action_key[1:]:
-            state.board[x][y] = state.playerColor
-        state.next_turn()
-
-
-    def getValidMoves(self, state):
-        moves = {(x, y):self.isValidMove(state, x,y) for x in range(self.height) for y in range(self.width)}
-        return {k:v for k,v in moves.items() if v}
     
     def __spiral_coords(self, board, r1, c1, r2, c2, weights):
         """
@@ -100,46 +101,36 @@ class Reversi():
         self.__spiral_coords(w_board, 1,1,self.height-2, self.width-2, weights[3:5]+[weights[4]])
         return w_board
         
-    def evaluation_function(self, state, tile):
-        score, opp = 0, 3^tile
-        w_board = self.__get_weight_board()
-        for x in range(self.height):
-            for y in range(self.width):
-                if state.board[x][y] == tile:
-                    score += w_board[x][y] if self.eval_mode == 'weight' else 1
-                elif state.board[x][y] == opp:
-                    score -= w_board[x][y] if self.eval_mode == 'weight' else 1
+    def evaluation_function(self, tile):
+        score, opp = 0, tile^3
+        coef = {0:0, tile: 1, opp:-1} 
+        for r in range(self.height):
+            for c in range(self.width):
+                score += self.w_board[r][c]* coef[self.board[r][c]] if self.eval_mode == 'weight' else 1
         return score
         
     
-    def is_terminal(self, state):
-        terminal = False
-        if not self.getValidMoves(state):
-            state.next_turn()
-            if not self.getValidMoves(state):
-                terminal = True
-            state.next_turn()
-        return terminal
+    def is_terminal(self):
+        return self.pass_info == 3
     
 
 class Reversi_Gmae():
     def __init__(self, height, width):
-        self.game = Reversi(height, width)
         self.height, self.width = height, width
         board = [[0]*width for _ in range(height)]
         H, W = height//2, width//2
         board[H-1][W-1], board[H-1][W] = 2, 1
         board[H][W-1], board[H][W] = 1, 2
-        self.state = State(board, 1)
+        self.state = ReversiState(board, 1)
         
     def make_move(self, x, y):
-        valid_moves = self.game.getValidMoves(self.state)
+        valid_moves = self.state.getValidMoves()
         if (x,y) in valid_moves:
-            self.game.makeMove(self.state, valid_moves[(x,y)])
+            self.state.makeMove(valid_moves[(x,y)])
     
     def check_move(self):
         # 輪空規則
-        valid_moves = self.game.getValidMoves(self.state)
+        valid_moves = self.state.getValidMoves()
         if not valid_moves:
             self.state.next_turn()
             
@@ -156,10 +147,10 @@ class Reversi_Gmae():
         return self.state.playerColor
     
     def get_hint(self):
-        return set(self.game.getValidMoves(self.state))
+        return set(self.state.getValidMoves()) - {'PASS'}
     
     def is_terminal(self):
-        return self.game.is_terminal(self.state)
+        return self.state.is_terminal()
     
     # 計算當前比分
     def getScoreOfBoard(self)-> dict:
@@ -181,9 +172,9 @@ class Reversi_Gmae():
     
     def ai_action(self):
         end_mode = self.__count_empty_grid()<=12
-        self.game.eval_mode = 'weight' if not end_mode else 'num'
+        self.state.eval_mode = 'weight' if not end_mode else 'num'
         depth = 5 if not end_mode else 10
         if end_mode:
             print('end mode analysize...')
-        AI = MinimaxABAgent(depth, self.get_turn(), self.game, self.state)
+        AI = MinimaxABAgent(depth, self.get_turn(), self.state)
         AI.choose_action()
