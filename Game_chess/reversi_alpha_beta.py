@@ -2,8 +2,7 @@ import sys
 sys.path.append('..') # 添加相對路徑上兩層到sys.path，讓程式找到的模組_package
 from _package._game_theory.alpha_beta_algo import MinimaxABAgent
 
-import time
-import random
+import cProfile
 
 class ReversiState():
     """ 
@@ -32,7 +31,7 @@ class ReversiState():
             while self.isOnBoard(_r, _c) and self.board[_r][_c] == opp_tile:
                 tilesToFlip.append([_r, _c])
                 _r, _c, flip = _r+dr, _c+dc, flip+1
-            if flip>0 and not(self.isOnBoard(_r, _c) and self.board[_r][_c] == tile):
+            if flip and not(self.isOnBoard(_r, _c) and self.board[_r][_c] == tile):
                tilesToFlip = tilesToFlip[:-flip] # 沒夾到對手的棋子，抹去記錄
         if tilesToFlip:
             return [[r, c]] + tilesToFlip
@@ -115,8 +114,8 @@ class ReversiState():
     
     def is_terminal(self):
         return self.pass_info == 3
-    
-if __name__=='__main__':
+
+def main():
     """
     黑白棋套用alpha-beta算法
     平均每秒可搜索10000個節點以上
@@ -143,4 +142,8 @@ if __name__=='__main__':
     state = ReversiState(board, play_color)
     AI = MinimaxABAgent(7, play_color, state)
     result = AI.choose_action()
+    
+if __name__=='__main__':
+    cProfile.run('main()')
+    
     
