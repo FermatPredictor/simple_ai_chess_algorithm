@@ -16,22 +16,22 @@ class ReversiState():
         self.pass_info = 0 # 0:無pass, 1:黑pass, 2:白pass, 3:黑白均pass，此時game over 
         self.w_board = self.__get_weight_board()
         
-    def isOnBoard(self, r, c):
-        return 0 <= r < self.height and 0 <= c < self.width
+    def isOnBoard(self, r, c, H, W):
+        return 0 <= r < H and 0 <= c < W
     
     #檢查tile放在某個座標是否為合法棋步，如果是則回傳翻轉的對手棋子
     def isValidMove(self, r, c):
-        if not self.isOnBoard(r,c) or self.board[r][c]!=0:
+        if self.board[r][c]!=0:
             return False
         tile, opp_tile = self.playerColor , self.opp_color()
         tilesToFlip = []
         dirs = [[0, 1], [1, 1], [1, 0], [1, -1], [0, -1], [-1, -1], [-1, 0], [-1, 1]] # 定義八個方向
         for dr, dc in dirs:
             _r, _c, flip = r+dr, c+dc, 0
-            while self.isOnBoard(_r, _c) and self.board[_r][_c] == opp_tile:
+            while self.isOnBoard(_r, _c, self.height,self.width) and self.board[_r][_c] == opp_tile:
                 tilesToFlip.append([_r, _c])
                 _r, _c, flip = _r+dr, _c+dc, flip+1
-            if flip and not(self.isOnBoard(_r, _c) and self.board[_r][_c] == tile):
+            if flip and not(self.isOnBoard(_r, _c, self.height,self.width) and self.board[_r][_c] == tile):
                tilesToFlip = tilesToFlip[:-flip] # 沒夾到對手的棋子，抹去記錄
         if tilesToFlip:
             return [[r, c]] + tilesToFlip
@@ -58,6 +58,12 @@ class ReversiState():
         self.next_turn()
 
     def getValidMoves(self):
+        """
+        TODO: 目前做時間優化，暫將ai的「random」close，
+        As is: 檢查棋盤上的所有格子
+        To be: 先定位對手棋子，每次看上下、左右、兩斜角，
+        若兩方向一空一邊有棋子，那個空格才有可能是合法棋步
+        """
         moves = {(x, y):self.isValidMove(x,y) for x in range(self.height) for y in range(self.width)}
         move_fliter = {k:(v, self.pass_info) for k,v in moves.items() if v}
         return move_fliter if move_fliter else {'PASS': ('PASS', self.pass_info)}
