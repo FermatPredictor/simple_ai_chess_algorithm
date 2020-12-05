@@ -130,9 +130,9 @@ class ReversiState():
             for c in range(self.width):
                 score += 1* coef[self.board[r][c]]
         if score>0:
-            return 1
-        if score<0:
             return -1
+        if score<0:
+            return 1
         return 0  
         
     def is_terminal(self):
@@ -152,11 +152,12 @@ class MonteCarloTreeSearchNode(object):
        - def makeMove(self, action_key): 自定義action_key行動
        - def unMakeMove(self, action_key): 此函數的用意是state可以還原，就只需創建一次，避免需要大量複製state而耗時
     """
-    def __init__(self, state, parent=None):
+    def __init__(self, state, parent=None, action=None):
         self._number_of_visits = 0.
         self._results = defaultdict(int) #1:win, -1:lose, 0: draw
         self.state = state
         self.parent = parent
+        self.action = action
         self.children = []
 
     @property
@@ -168,7 +169,7 @@ class MonteCarloTreeSearchNode(object):
     @property
     def q(self):
         wins, loses = self._results[1], self._results[-1]
-        return wins - loses
+        return wins # ins-loses
 
     @property
     def n(self):
@@ -178,7 +179,7 @@ class MonteCarloTreeSearchNode(object):
         action = self.untried_actions.pop()
         cur_state = deepcopy(self.state)
         cur_state.makeMove(action)
-        child_node = MonteCarloTreeSearchNode(cur_state, parent=self)
+        child_node = MonteCarloTreeSearchNode(cur_state, parent=self, action=action)
         self.children.append(child_node)
         return child_node
 
@@ -188,17 +189,23 @@ class MonteCarloTreeSearchNode(object):
     def rollout(self):
         player_color = self.state.playerColor
         cur_state = deepcopy(self.state)
+        print('rollout前')
+        print(player_color)
+        pprint(cur_state.board)
         while not cur_state.is_terminal():
             possible_moves = list(cur_state.getValidMoves().values())
             action = self.rollout_policy(possible_moves)
             cur_state.makeMove(action)
+        print('rollout後')
+        print(player_color)
+        pprint(cur_state.board)
         return cur_state.winner(player_color)
 
     def backpropagate(self, result):
         self._number_of_visits += 1.
         self._results[result] += 1.
         if self.parent:
-            self.parent.backpropagate(result)
+            self.parent.backpropagate(-result)
 
     def is_fully_expanded(self):
         return not self.untried_actions
@@ -226,6 +233,8 @@ class MonteCarloTreeSearch:
         eval_time = max(0.00001, time.time() - start_time)
         print(f"--- {eval_time} seconds ---, avg: {simulations_number/eval_time} (explode_node per seconds)")
         # exploitation only
+        for c in self.root.children:
+            print(c.action, c.q, c.n, c.q/c.n)
         return self.root.best_child(c_param=0.)
 
     def tree_policy(self):
@@ -239,6 +248,14 @@ class MonteCarloTreeSearch:
 
 def main():
     play_color = 1
+    # board = [[0,2,1,2,0,0,0,0],
+    #           [0,0,0,0,0,0,0,0],
+    #           [0,0,0,0,0,0,0,0],
+    #           [0,0,0,0,0,0,0,0],
+    #           [0,0,0,0,0,0,0,0],
+    #           [0,0,0,0,0,0,0,0],
+    #           [0,0,0,0,0,0,0,0],
+    #           [0,0,0,0,0,0,0,0]]
     board = [[0,0,0,0,0,0,0,0],
               [0,0,0,0,0,0,0,0],
               [0,0,0,1,0,0,0,0],
@@ -259,9 +276,10 @@ def main():
     """
     state = ReversiState(board, play_color)
     AI = MonteCarloTreeSearch(MonteCarloTreeSearchNode(state))
-    result = AI.best_action(100)
-    #pprint(result.state.board)
+    result = AI.best_action(500)
+    pprint(result.action)
     
 
 if __name__=='__main__':
-    cProfile.run('main()')
+    main()
+    #cProfile.run('main()')
