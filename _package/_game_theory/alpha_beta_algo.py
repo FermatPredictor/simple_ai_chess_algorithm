@@ -61,7 +61,7 @@ class MinimaxABAgent:
         """ 若為pass或是單行道的情形，深度往後搜一層 """
         depth = current_depth if len(key_of_actions)<=1 else current_depth+1            
  
-        #random.shuffle(key_of_actions) #randomness
+        random.shuffle(key_of_actions) #randomness
         best_value = float('-inf') if is_max_turn else float('inf')
         action_target = ""
         

@@ -2,6 +2,7 @@ import sys
 sys.path.append('../..') # 添加相對路徑上兩層到sys.path，讓程式找到的模組_package
 from _package._game_theory.alpha_beta_algo import MinimaxABAgent
 
+
 class ReversiState():
     """ 
     player_color : int(usually 1 or 2, 0 for empty grid), 下一步換誰下
@@ -14,26 +15,8 @@ class ReversiState():
         self.pass_info = 0 # 0:無pass, 1:黑pass, 2:白pass, 3:黑白均pass，此時game over 
         self.w_board = self.__get_weight_board()
         
-    def isOnBoard(self, r, c):
-        return 0 <= r < self.height and 0 <= c < self.width
-    
-    #檢查tile放在某個座標是否為合法棋步，如果是則回傳翻轉的對手棋子
-    def isValidMove(self, r, c):
-        if not self.isOnBoard(r,c) or self.board[r][c]!=0:
-            return False
-        tile, opp_tile = self.playerColor , self.opp_color()
-        tilesToFlip = []
-        dirs = [[0, 1], [1, 1], [1, 0], [1, -1], [0, -1], [-1, -1], [-1, 0], [-1, 1]] # 定義八個方向
-        for dr, dc in dirs:
-            _r, _c, flip = r+dr, c+dc, 0
-            while self.isOnBoard(_r, _c) and self.board[_r][_c] == opp_tile:
-                tilesToFlip.append([_r, _c])
-                _r, _c, flip = _r+dr, _c+dc, flip+1
-            if flip>0 and not(self.isOnBoard(_r, _c) and self.board[_r][_c] == tile):
-                tilesToFlip = tilesToFlip[:-flip] # 沒夾到對手的棋子，抹去記錄
-        if tilesToFlip:
-            return [[r, c]] + tilesToFlip
-        return False
+    def isOnBoard(self, r, c, H, W):
+        return 0 <= r < H and 0 <= c < W
     
     def makeMove(self, action_key):
         key, pass_info = action_key
@@ -54,12 +37,40 @@ class ReversiState():
             for r, c in key[1:]:
                 self.board[r][c] = self.playerColor
         self.next_turn()
-
-    def getValidMoves(self):
-        moves = {(x, y):self.isValidMove(x,y) for x in range(self.height) for y in range(self.width)}
-        move_fliter = {k:(v, self.pass_info) for k,v in moves.items() if v}
-        return move_fliter if move_fliter else {'PASS': ('PASS', self.pass_info)}
     
+    def getValidMoves(self):
+        """
+        回傳字典: {合法棋步座標: 翻轉的對手棋子}
+        算法改進: 
+         As is: 檢查棋盤上的所有格子
+         To be: 先定位自己棋子，往八個方向搜索是否夾到對手棋子
+        效能: 與上一版相比大約快 3 倍
+        """
+        H, W = self.height, self.width
+        tile, opp_tile = self.playerColor , self.opp_color()
+        move_dict = {}
+        dirs = [[0, 1], [1, 1], [1, 0], [1, -1], [0, -1], [-1, -1], [-1, 0], [-1, 1]] # 定義八個方向
+        for r in range(H):
+            for c in range(W):
+                if self.board[r][c]!=tile:
+                    continue
+                for dr, dc in dirs:
+                    _r, _c, flip = r+dr, c+dc, 0
+                    while self.isOnBoard(_r, _c, H, W) and self.board[_r][_c] == opp_tile:
+                        _r, _c, flip = _r+dr, _c+dc, flip+1
+                    if flip and self.isOnBoard(_r, _c, H, W) and self.board[_r][_c] == 0:
+                        # 夾到對手的棋子，回頭記錄
+                        if (_r, _c) not in move_dict:
+                            move_dict[(_r, _c)] = [(_r, _c)] 
+                        grid_r, gird_c = _r, _c
+                        for i in range(flip):
+                            _r, _c = _r-dr, _c-dc
+                            move_dict[(grid_r, gird_c)].append((_r, _c))
+        move_dict = {k:(v, self.pass_info) for k,v in move_dict.items()}
+        return move_dict if move_dict else {'PASS': ('PASS', self.pass_info)}
+                
+
+                
     def opp_color(self):
         return 3^self.playerColor
     
@@ -173,7 +184,7 @@ class Reversi_Game():
     def ai_action(self):
         end_mode = self.__count_empty_grid()<=12
         self.state.eval_mode = 'weight' if not end_mode else 'num'
-        depth = 5 if not end_mode else 10
+        depth = 5 if not end_mode else 8
         if end_mode:
             print('end mode analysize...')
         AI = MinimaxABAgent(depth, self.get_turn(), self.state)
