@@ -20,12 +20,12 @@ class Reversi_Game():
     
     def check_move(self):
         # 輪空規則
-        valid_moves = self.state.getValidMoves()
+        valid_moves = self.get_hint()
         if not valid_moves:
-            self.state.next_turn()
+            self.change_turn()
             
     def change_turn(self):
-        self.state.next_turn()
+        self.state.makeMove(('PASS', 0))
             
     def set_board(self, x, y):
         self.state.board[x][y] = (self.state.board[x][y]+1)%3

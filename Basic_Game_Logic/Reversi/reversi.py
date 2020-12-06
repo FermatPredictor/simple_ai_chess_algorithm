@@ -1,4 +1,4 @@
-from Game_Logic_Cython.reversi_get_valid_move_cython import getValidMoves as moves
+from .Game_Logic_Cython.reversi_get_valid_move_cython import getValidMoves as moves
 
 class ReversiState():
     """ 
@@ -10,6 +10,7 @@ class ReversiState():
     - unMakeMove(self, action_key): 根據同一個action_key還原棋步，通常用於alpha_beta算法避免創建過多state
     - is_terminal(self): 判斷遊戲是否結束了
     - winner(self): 遊戲結束的狀況下，判斷贏家是誰(0 for 和棋)
+    - next_turn(self): 若遇到輪空的狀況，換下一個玩家行動
     """
     def __init__(self, board, playerColor):
         self.board = board
