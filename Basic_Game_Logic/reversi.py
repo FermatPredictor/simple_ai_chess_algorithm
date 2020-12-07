@@ -1,7 +1,7 @@
 if __name__=='__main__':
-    from Game_Logic_Cython.reversi_get_valid_move_cython import getValidMoves as moves
+    from Reversi_Cython.reversi_get_valid_move_cython import getValidMoves as moves
 else:
-    from .Game_Logic_Cython.reversi_get_valid_move_cython import getValidMoves as moves
+    from .Reversi_Cython.reversi_get_valid_move_cython import getValidMoves as moves
 
 class ReversiState():
     """ 

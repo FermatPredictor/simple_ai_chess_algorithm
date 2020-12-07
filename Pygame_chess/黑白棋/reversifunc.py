@@ -63,7 +63,7 @@ class Reversi_Game():
     def ai_action(self):
         end_mode = self.__count_empty_grid()<=12
         self.state.eval_mode = 'weight' if not end_mode else 'num'
-        depth = 5 if not end_mode else 8
+        depth = 6 if not end_mode else 10
         if end_mode:
             print('end mode analysize...')
         AI = MinimaxABAgent(depth, self.get_turn(), self.state)

@@ -1,9 +1,16 @@
 import sys
 sys.path.append('..') # 添加相對路徑上兩層到sys.path，讓程式找到的模組_package
 from _package._game_theory.alpha_beta_algo import MinimaxABAgent
-from Basic_Game_Logic.Reversi.reversi import ReversiState
+from Basic_Game_Logic.reversi import ReversiState
 
 import cProfile
+
+if __name__=='__main__':
+    from Reversi_Cython.eval_func_cython import eval_func as ef
+    from Reversi_Cython.eval_func_cython import count_tile
+else:
+    from .Reversi_Cython.eval_func_cython import eval_func as ef
+    from .Reversi_Cython.eval_func_cython import count_tile
 
 class AB_ReversiState(ReversiState):
     """ 
@@ -50,12 +57,8 @@ class AB_ReversiState(ReversiState):
         return w_board
         
     def evaluation_function(self, tile):
-        score, opp = 0, tile^3
-        coef = {0:0, tile: 1, opp:-1} 
-        for r in range(self.height):
-            for c in range(self.width):
-                score += (self.w_board[r][c] if self.eval_mode == 'weight' else 1)* coef[self.board[r][c]]
-        return score
+        return ef(self.board, self.height, self.width, tile, self.w_board) if self.eval_mode == 'weight' \
+               else count_tile(self.board, self.height, self.width, tile)
 
 
 def main():
