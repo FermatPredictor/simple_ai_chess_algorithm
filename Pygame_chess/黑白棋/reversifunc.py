@@ -61,7 +61,7 @@ class Reversi_Game():
         return empty_grid
     
     def ai_action(self):
-        end_mode = self.__count_empty_grid()<=12
+        end_mode = self.__count_empty_grid()<=14
         self.state.eval_mode = 'weight' if not end_mode else 'num'
         depth = 6 if not end_mode else 10
         if end_mode:
