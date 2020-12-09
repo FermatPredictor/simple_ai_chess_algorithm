@@ -1964,7 +1964,7 @@ static PyThread_type_lock __pyx_memoryview_thread_locks[8];
 static int __pyx_f_14reversi_cython_isOnBoard(int, int, int, int); /*proto*/
 static PyObject *__pyx_f_14reversi_cython_getValidMoves(__Pyx_memviewslice, int, int, int, int, int __pyx_skip_dispatch); /*proto*/
 static PyObject *__pyx_f_14reversi_cython_count_tile(__Pyx_memviewslice, int, int __pyx_skip_dispatch); /*proto*/
-static PyObject *__pyx_f_14reversi_cython_eval_func(__Pyx_memviewslice, int, int, int, __Pyx_memviewslice, int __pyx_skip_dispatch); /*proto*/
+static PyObject *__pyx_f_14reversi_cython_eval_func(__Pyx_memviewslice, int, __Pyx_memviewslice, int __pyx_skip_dispatch); /*proto*/
 static struct __pyx_array_obj *__pyx_array_new(PyObject *, Py_ssize_t, char *, char *, char *); /*proto*/
 static void *__pyx_align_pointer(void *, size_t); /*proto*/
 static PyObject *__pyx_memoryview_new(PyObject *, int, int, __Pyx_TypeInfo *); /*proto*/
@@ -2005,7 +2005,6 @@ int __pyx_module_is_main_reversi_cython = 0;
 
 /* Implementation of 'reversi_cython' */
 static PyObject *__pyx_builtin_range;
-static PyObject *__pyx_builtin_zip;
 static PyObject *__pyx_builtin_MemoryError;
 static PyObject *__pyx_builtin_ValueError;
 static PyObject *__pyx_builtin_enumerate;
@@ -2019,7 +2018,6 @@ static const char __pyx_k_i[] = "i";
 static const char __pyx_k_id[] = "id";
 static const char __pyx_k_new[] = "__new__";
 static const char __pyx_k_obj[] = "obj";
-static const char __pyx_k_zip[] = "zip";
 static const char __pyx_k_PASS[] = "PASS";
 static const char __pyx_k_base[] = "base";
 static const char __pyx_k_dict[] = "__dict__";
@@ -2208,10 +2206,9 @@ static PyObject *__pyx_n_s_unpack;
 static PyObject *__pyx_n_s_update;
 static PyObject *__pyx_n_s_w_board;
 static PyObject *__pyx_n_s_width;
-static PyObject *__pyx_n_s_zip;
 static PyObject *__pyx_pf_14reversi_cython_getValidMoves(CYTHON_UNUSED PyObject *__pyx_self, __Pyx_memviewslice __pyx_v_board, int __pyx_v_height, int __pyx_v_width, int __pyx_v_playerColor, int __pyx_v_pass_info); /* proto */
 static PyObject *__pyx_pf_14reversi_cython_2count_tile(CYTHON_UNUSED PyObject *__pyx_self, __Pyx_memviewslice __pyx_v_board, int __pyx_v_tile); /* proto */
-static PyObject *__pyx_pf_14reversi_cython_4eval_func(CYTHON_UNUSED PyObject *__pyx_self, __Pyx_memviewslice __pyx_v_board, int __pyx_v_height, int __pyx_v_width, int __pyx_v_tile, __Pyx_memviewslice __pyx_v_w_board); /* proto */
+static PyObject *__pyx_pf_14reversi_cython_4eval_func(CYTHON_UNUSED PyObject *__pyx_self, __Pyx_memviewslice __pyx_v_board, int __pyx_v_tile, __Pyx_memviewslice __pyx_v_w_board); /* proto */
 static int __pyx_pf_7cpython_5array_5array___getbuffer__(arrayobject *__pyx_v_self, Py_buffer *__pyx_v_info, CYTHON_UNUSED int __pyx_v_flags); /* proto */
 static void __pyx_pf_7cpython_5array_5array_2__releasebuffer__(CYTHON_UNUSED arrayobject *__pyx_v_self, Py_buffer *__pyx_v_info); /* proto */
 static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array___cinit__(struct __pyx_array_obj *__pyx_v_self, PyObject *__pyx_v_shape, Py_ssize_t __pyx_v_itemsize, PyObject *__pyx_v_format, PyObject *__pyx_v_mode, int __pyx_v_allocate_buffer); /* proto */
@@ -2293,8 +2290,8 @@ static PyObject *__pyx_tuple__25;
 static PyObject *__pyx_codeobj__26;
 /* Late includes */
 
-/* "reversi_cython.pyx":4
- * import array
+/* "reversi_cython.pyx":5
+ * 
  * 
  * cdef bint isOnBoard(int r, int c, int H, int W):             # <<<<<<<<<<<<<<
  *     return 0 <= r < H and 0 <= c < W
@@ -2309,12 +2306,12 @@ static int __pyx_f_14reversi_cython_isOnBoard(int __pyx_v_r, int __pyx_v_c, int 
   int __pyx_t_3;
   __Pyx_RefNannySetupContext("isOnBoard", 0);
 
-  /* "reversi_cython.pyx":5
+  /* "reversi_cython.pyx":6
  * 
  * cdef bint isOnBoard(int r, int c, int H, int W):
  *     return 0 <= r < H and 0 <= c < W             # <<<<<<<<<<<<<<
  * 
- * cpdef getValidMoves(int[:] board, int height, int width, int playerColor, int pass_info):
+ * 
  */
   __pyx_t_2 = (0 <= __pyx_v_r);
   if (__pyx_t_2) {
@@ -2336,8 +2333,8 @@ static int __pyx_f_14reversi_cython_isOnBoard(int __pyx_v_r, int __pyx_v_c, int 
   __pyx_r = __pyx_t_1;
   goto __pyx_L0;
 
-  /* "reversi_cython.pyx":4
- * import array
+  /* "reversi_cython.pyx":5
+ * 
  * 
  * cdef bint isOnBoard(int r, int c, int H, int W):             # <<<<<<<<<<<<<<
  *     return 0 <= r < H and 0 <= c < W
@@ -2350,8 +2347,8 @@ static int __pyx_f_14reversi_cython_isOnBoard(int __pyx_v_r, int __pyx_v_c, int 
   return __pyx_r;
 }
 
-/* "reversi_cython.pyx":7
- *     return 0 <= r < H and 0 <= c < W
+/* "reversi_cython.pyx":9
+ * 
  * 
  * cpdef getValidMoves(int[:] board, int height, int width, int playerColor, int pass_info):             # <<<<<<<<<<<<<<
  *     """
@@ -2411,7 +2408,7 @@ static PyObject *__pyx_f_14reversi_cython_getValidMoves(__Pyx_memviewslice __pyx
   PyObject *(*__pyx_t_26)(PyObject *);
   __Pyx_RefNannySetupContext("getValidMoves", 0);
 
-  /* "reversi_cython.pyx":13
+  /* "reversi_cython.pyx":15
  *     pass_info: pass0:pass, 1:pass, 2:pass
  *     """
  *     cdef int H = height             # <<<<<<<<<<<<<<
@@ -2420,7 +2417,7 @@ static PyObject *__pyx_f_14reversi_cython_getValidMoves(__Pyx_memviewslice __pyx
  */
   __pyx_v_H = __pyx_v_height;
 
-  /* "reversi_cython.pyx":14
+  /* "reversi_cython.pyx":16
  *     """
  *     cdef int H = height
  *     cdef int W = width             # <<<<<<<<<<<<<<
@@ -2429,7 +2426,7 @@ static PyObject *__pyx_f_14reversi_cython_getValidMoves(__Pyx_memviewslice __pyx
  */
   __pyx_v_W = __pyx_v_width;
 
-  /* "reversi_cython.pyx":15
+  /* "reversi_cython.pyx":17
  *     cdef int H = height
  *     cdef int W = width
  *     cdef int tile = playerColor             # <<<<<<<<<<<<<<
@@ -2438,7 +2435,7 @@ static PyObject *__pyx_f_14reversi_cython_getValidMoves(__Pyx_memviewslice __pyx
  */
   __pyx_v_tile = __pyx_v_playerColor;
 
-  /* "reversi_cython.pyx":16
+  /* "reversi_cython.pyx":18
  *     cdef int W = width
  *     cdef int tile = playerColor
  *     cdef int opp_tile = playerColor^3             # <<<<<<<<<<<<<<
@@ -2447,49 +2444,49 @@ static PyObject *__pyx_f_14reversi_cython_getValidMoves(__Pyx_memviewslice __pyx
  */
   __pyx_v_opp_tile = (__pyx_v_playerColor ^ 3);
 
-  /* "reversi_cython.pyx":17
+  /* "reversi_cython.pyx":19
  *     cdef int tile = playerColor
  *     cdef int opp_tile = playerColor^3
  *     cdef dict move_dict = {}             # <<<<<<<<<<<<<<
  *     cdef int r,c, dr, dc, di
  *     cdef list dirs = [(r,c, r*width+c)for r in [-1,0,1] for c in [-1,0,1] if r or c] #
  */
-  __pyx_t_1 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 17, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 19, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_move_dict = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "reversi_cython.pyx":19
+  /* "reversi_cython.pyx":21
  *     cdef dict move_dict = {}
  *     cdef int r,c, dr, dc, di
  *     cdef list dirs = [(r,c, r*width+c)for r in [-1,0,1] for c in [-1,0,1] if r or c] #             # <<<<<<<<<<<<<<
  *     cdef int idx = -1
  *     cdef int inter_r, inter_c, inter_idx, flip
  */
-  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 19, __pyx_L1_error)
+  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 21, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_t_2 = __pyx_tuple_; __Pyx_INCREF(__pyx_t_2); __pyx_t_3 = 0;
   for (;;) {
     if (__pyx_t_3 >= 3) break;
     #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-    __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_2, __pyx_t_3); __Pyx_INCREF(__pyx_t_4); __pyx_t_3++; if (unlikely(0 < 0)) __PYX_ERR(0, 19, __pyx_L1_error)
+    __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_2, __pyx_t_3); __Pyx_INCREF(__pyx_t_4); __pyx_t_3++; if (unlikely(0 < 0)) __PYX_ERR(0, 21, __pyx_L1_error)
     #else
-    __pyx_t_4 = PySequence_ITEM(__pyx_t_2, __pyx_t_3); __pyx_t_3++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 19, __pyx_L1_error)
+    __pyx_t_4 = PySequence_ITEM(__pyx_t_2, __pyx_t_3); __pyx_t_3++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 21, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     #endif
-    __pyx_t_5 = __Pyx_PyInt_As_int(__pyx_t_4); if (unlikely((__pyx_t_5 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 19, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyInt_As_int(__pyx_t_4); if (unlikely((__pyx_t_5 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 21, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __pyx_v_r = __pyx_t_5;
     __pyx_t_4 = __pyx_tuple_; __Pyx_INCREF(__pyx_t_4); __pyx_t_6 = 0;
     for (;;) {
       if (__pyx_t_6 >= 3) break;
       #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-      __pyx_t_7 = PyTuple_GET_ITEM(__pyx_t_4, __pyx_t_6); __Pyx_INCREF(__pyx_t_7); __pyx_t_6++; if (unlikely(0 < 0)) __PYX_ERR(0, 19, __pyx_L1_error)
+      __pyx_t_7 = PyTuple_GET_ITEM(__pyx_t_4, __pyx_t_6); __Pyx_INCREF(__pyx_t_7); __pyx_t_6++; if (unlikely(0 < 0)) __PYX_ERR(0, 21, __pyx_L1_error)
       #else
-      __pyx_t_7 = PySequence_ITEM(__pyx_t_4, __pyx_t_6); __pyx_t_6++; if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 19, __pyx_L1_error)
+      __pyx_t_7 = PySequence_ITEM(__pyx_t_4, __pyx_t_6); __pyx_t_6++; if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 21, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_7);
       #endif
-      __pyx_t_5 = __Pyx_PyInt_As_int(__pyx_t_7); if (unlikely((__pyx_t_5 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 19, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyInt_As_int(__pyx_t_7); if (unlikely((__pyx_t_5 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 21, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
       __pyx_v_c = __pyx_t_5;
       __pyx_t_9 = (__pyx_v_r != 0);
@@ -2502,13 +2499,13 @@ static PyObject *__pyx_f_14reversi_cython_getValidMoves(__Pyx_memviewslice __pyx
       __pyx_t_8 = __pyx_t_9;
       __pyx_L8_bool_binop_done:;
       if (__pyx_t_8) {
-        __pyx_t_7 = __Pyx_PyInt_From_int(__pyx_v_r); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 19, __pyx_L1_error)
+        __pyx_t_7 = __Pyx_PyInt_From_int(__pyx_v_r); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 21, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_7);
-        __pyx_t_10 = __Pyx_PyInt_From_int(__pyx_v_c); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 19, __pyx_L1_error)
+        __pyx_t_10 = __Pyx_PyInt_From_int(__pyx_v_c); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 21, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_10);
-        __pyx_t_11 = __Pyx_PyInt_From_int(((__pyx_v_r * __pyx_v_width) + __pyx_v_c)); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 19, __pyx_L1_error)
+        __pyx_t_11 = __Pyx_PyInt_From_int(((__pyx_v_r * __pyx_v_width) + __pyx_v_c)); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 21, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_11);
-        __pyx_t_12 = PyTuple_New(3); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 19, __pyx_L1_error)
+        __pyx_t_12 = PyTuple_New(3); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 21, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_12);
         __Pyx_GIVEREF(__pyx_t_7);
         PyTuple_SET_ITEM(__pyx_t_12, 0, __pyx_t_7);
@@ -2519,7 +2516,7 @@ static PyObject *__pyx_f_14reversi_cython_getValidMoves(__Pyx_memviewslice __pyx
         __pyx_t_7 = 0;
         __pyx_t_10 = 0;
         __pyx_t_11 = 0;
-        if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_t_12))) __PYX_ERR(0, 19, __pyx_L1_error)
+        if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_t_12))) __PYX_ERR(0, 21, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
       }
     }
@@ -2529,7 +2526,7 @@ static PyObject *__pyx_f_14reversi_cython_getValidMoves(__Pyx_memviewslice __pyx
   __pyx_v_dirs = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "reversi_cython.pyx":20
+  /* "reversi_cython.pyx":22
  *     cdef int r,c, dr, dc, di
  *     cdef list dirs = [(r,c, r*width+c)for r in [-1,0,1] for c in [-1,0,1] if r or c] #
  *     cdef int idx = -1             # <<<<<<<<<<<<<<
@@ -2538,7 +2535,7 @@ static PyObject *__pyx_f_14reversi_cython_getValidMoves(__Pyx_memviewslice __pyx
  */
   __pyx_v_idx = -1;
 
-  /* "reversi_cython.pyx":23
+  /* "reversi_cython.pyx":25
  *     cdef int inter_r, inter_c, inter_idx, flip
  * 
  *     for r in range(H):             # <<<<<<<<<<<<<<
@@ -2550,7 +2547,7 @@ static PyObject *__pyx_f_14reversi_cython_getValidMoves(__Pyx_memviewslice __pyx
   for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
     __pyx_v_r = __pyx_t_14;
 
-    /* "reversi_cython.pyx":24
+    /* "reversi_cython.pyx":26
  * 
  *     for r in range(H):
  *         for c in range(W):             # <<<<<<<<<<<<<<
@@ -2562,7 +2559,7 @@ static PyObject *__pyx_f_14reversi_cython_getValidMoves(__Pyx_memviewslice __pyx
     for (__pyx_t_17 = 0; __pyx_t_17 < __pyx_t_16; __pyx_t_17+=1) {
       __pyx_v_c = __pyx_t_17;
 
-      /* "reversi_cython.pyx":25
+      /* "reversi_cython.pyx":27
  *     for r in range(H):
  *         for c in range(W):
  *             idx += 1             # <<<<<<<<<<<<<<
@@ -2571,7 +2568,7 @@ static PyObject *__pyx_f_14reversi_cython_getValidMoves(__Pyx_memviewslice __pyx
  */
       __pyx_v_idx = (__pyx_v_idx + 1);
 
-      /* "reversi_cython.pyx":26
+      /* "reversi_cython.pyx":28
  *         for c in range(W):
  *             idx += 1
  *             if board[idx]!=tile:             # <<<<<<<<<<<<<<
@@ -2586,12 +2583,12 @@ static PyObject *__pyx_f_14reversi_cython_getValidMoves(__Pyx_memviewslice __pyx
       } else if (unlikely(__pyx_t_18 >= __pyx_v_board.shape[0])) __pyx_t_19 = 0;
       if (unlikely(__pyx_t_19 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_19);
-        __PYX_ERR(0, 26, __pyx_L1_error)
+        __PYX_ERR(0, 28, __pyx_L1_error)
       }
       __pyx_t_8 = (((*((int *) ( /* dim=0 */ (__pyx_v_board.data + __pyx_t_18 * __pyx_v_board.strides[0]) ))) != __pyx_v_tile) != 0);
       if (__pyx_t_8) {
 
-        /* "reversi_cython.pyx":27
+        /* "reversi_cython.pyx":29
  *             idx += 1
  *             if board[idx]!=tile:
  *                 continue             # <<<<<<<<<<<<<<
@@ -2600,7 +2597,7 @@ static PyObject *__pyx_f_14reversi_cython_getValidMoves(__Pyx_memviewslice __pyx
  */
         goto __pyx_L12_continue;
 
-        /* "reversi_cython.pyx":26
+        /* "reversi_cython.pyx":28
  *         for c in range(W):
  *             idx += 1
  *             if board[idx]!=tile:             # <<<<<<<<<<<<<<
@@ -2609,7 +2606,7 @@ static PyObject *__pyx_f_14reversi_cython_getValidMoves(__Pyx_memviewslice __pyx
  */
       }
 
-      /* "reversi_cython.pyx":28
+      /* "reversi_cython.pyx":30
  *             if board[idx]!=tile:
  *                 continue
  *             for dr, dc, di in dirs:             # <<<<<<<<<<<<<<
@@ -2620,9 +2617,9 @@ static PyObject *__pyx_f_14reversi_cython_getValidMoves(__Pyx_memviewslice __pyx
       for (;;) {
         if (__pyx_t_3 >= PyList_GET_SIZE(__pyx_t_1)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_2 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_3); __Pyx_INCREF(__pyx_t_2); __pyx_t_3++; if (unlikely(0 < 0)) __PYX_ERR(0, 28, __pyx_L1_error)
+        __pyx_t_2 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_3); __Pyx_INCREF(__pyx_t_2); __pyx_t_3++; if (unlikely(0 < 0)) __PYX_ERR(0, 30, __pyx_L1_error)
         #else
-        __pyx_t_2 = PySequence_ITEM(__pyx_t_1, __pyx_t_3); __pyx_t_3++; if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 28, __pyx_L1_error)
+        __pyx_t_2 = PySequence_ITEM(__pyx_t_1, __pyx_t_3); __pyx_t_3++; if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 30, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
         #endif
         if ((likely(PyTuple_CheckExact(__pyx_t_2))) || (PyList_CheckExact(__pyx_t_2))) {
@@ -2631,7 +2628,7 @@ static PyObject *__pyx_f_14reversi_cython_getValidMoves(__Pyx_memviewslice __pyx
           if (unlikely(size != 3)) {
             if (size > 3) __Pyx_RaiseTooManyValuesError(3);
             else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-            __PYX_ERR(0, 28, __pyx_L1_error)
+            __PYX_ERR(0, 30, __pyx_L1_error)
           }
           #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
           if (likely(PyTuple_CheckExact(sequence))) {
@@ -2647,17 +2644,17 @@ static PyObject *__pyx_f_14reversi_cython_getValidMoves(__Pyx_memviewslice __pyx
           __Pyx_INCREF(__pyx_t_12);
           __Pyx_INCREF(__pyx_t_11);
           #else
-          __pyx_t_4 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 28, __pyx_L1_error)
+          __pyx_t_4 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 30, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_4);
-          __pyx_t_12 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 28, __pyx_L1_error)
+          __pyx_t_12 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 30, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_12);
-          __pyx_t_11 = PySequence_ITEM(sequence, 2); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 28, __pyx_L1_error)
+          __pyx_t_11 = PySequence_ITEM(sequence, 2); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 30, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_11);
           #endif
           __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
         } else {
           Py_ssize_t index = -1;
-          __pyx_t_10 = PyObject_GetIter(__pyx_t_2); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 28, __pyx_L1_error)
+          __pyx_t_10 = PyObject_GetIter(__pyx_t_2); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 30, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_10);
           __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
           __pyx_t_20 = Py_TYPE(__pyx_t_10)->tp_iternext;
@@ -2667,7 +2664,7 @@ static PyObject *__pyx_f_14reversi_cython_getValidMoves(__Pyx_memviewslice __pyx
           __Pyx_GOTREF(__pyx_t_12);
           index = 2; __pyx_t_11 = __pyx_t_20(__pyx_t_10); if (unlikely(!__pyx_t_11)) goto __pyx_L17_unpacking_failed;
           __Pyx_GOTREF(__pyx_t_11);
-          if (__Pyx_IternextUnpackEndCheck(__pyx_t_20(__pyx_t_10), 3) < 0) __PYX_ERR(0, 28, __pyx_L1_error)
+          if (__Pyx_IternextUnpackEndCheck(__pyx_t_20(__pyx_t_10), 3) < 0) __PYX_ERR(0, 30, __pyx_L1_error)
           __pyx_t_20 = NULL;
           __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
           goto __pyx_L18_unpacking_done;
@@ -2675,20 +2672,20 @@ static PyObject *__pyx_f_14reversi_cython_getValidMoves(__Pyx_memviewslice __pyx
           __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
           __pyx_t_20 = NULL;
           if (__Pyx_IterFinish() == 0) __Pyx_RaiseNeedMoreValuesError(index);
-          __PYX_ERR(0, 28, __pyx_L1_error)
+          __PYX_ERR(0, 30, __pyx_L1_error)
           __pyx_L18_unpacking_done:;
         }
-        __pyx_t_19 = __Pyx_PyInt_As_int(__pyx_t_4); if (unlikely((__pyx_t_19 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 28, __pyx_L1_error)
+        __pyx_t_19 = __Pyx_PyInt_As_int(__pyx_t_4); if (unlikely((__pyx_t_19 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 30, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-        __pyx_t_21 = __Pyx_PyInt_As_int(__pyx_t_12); if (unlikely((__pyx_t_21 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 28, __pyx_L1_error)
+        __pyx_t_21 = __Pyx_PyInt_As_int(__pyx_t_12); if (unlikely((__pyx_t_21 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 30, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-        __pyx_t_22 = __Pyx_PyInt_As_int(__pyx_t_11); if (unlikely((__pyx_t_22 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 28, __pyx_L1_error)
+        __pyx_t_22 = __Pyx_PyInt_As_int(__pyx_t_11); if (unlikely((__pyx_t_22 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 30, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
         __pyx_v_dr = __pyx_t_19;
         __pyx_v_dc = __pyx_t_21;
         __pyx_v_di = __pyx_t_22;
 
-        /* "reversi_cython.pyx":29
+        /* "reversi_cython.pyx":31
  *                 continue
  *             for dr, dc, di in dirs:
  *                 inter_r = r+dr             # <<<<<<<<<<<<<<
@@ -2697,7 +2694,7 @@ static PyObject *__pyx_f_14reversi_cython_getValidMoves(__Pyx_memviewslice __pyx
  */
         __pyx_v_inter_r = (__pyx_v_r + __pyx_v_dr);
 
-        /* "reversi_cython.pyx":30
+        /* "reversi_cython.pyx":32
  *             for dr, dc, di in dirs:
  *                 inter_r = r+dr
  *                 inter_c = c+dc             # <<<<<<<<<<<<<<
@@ -2706,7 +2703,7 @@ static PyObject *__pyx_f_14reversi_cython_getValidMoves(__Pyx_memviewslice __pyx
  */
         __pyx_v_inter_c = (__pyx_v_c + __pyx_v_dc);
 
-        /* "reversi_cython.pyx":31
+        /* "reversi_cython.pyx":33
  *                 inter_r = r+dr
  *                 inter_c = c+dc
  *                 inter_idx = idx+di             # <<<<<<<<<<<<<<
@@ -2715,7 +2712,7 @@ static PyObject *__pyx_f_14reversi_cython_getValidMoves(__Pyx_memviewslice __pyx
  */
         __pyx_v_inter_idx = (__pyx_v_idx + __pyx_v_di);
 
-        /* "reversi_cython.pyx":32
+        /* "reversi_cython.pyx":34
  *                 inter_c = c+dc
  *                 inter_idx = idx+di
  *                 flip = 0             # <<<<<<<<<<<<<<
@@ -2724,7 +2721,7 @@ static PyObject *__pyx_f_14reversi_cython_getValidMoves(__Pyx_memviewslice __pyx
  */
         __pyx_v_flip = 0;
 
-        /* "reversi_cython.pyx":33
+        /* "reversi_cython.pyx":35
  *                 inter_idx = idx+di
  *                 flip = 0
  *                 while isOnBoard(inter_r, inter_c, H, W) and board[inter_idx] == opp_tile:             # <<<<<<<<<<<<<<
@@ -2746,14 +2743,14 @@ static PyObject *__pyx_f_14reversi_cython_getValidMoves(__Pyx_memviewslice __pyx
           } else if (unlikely(__pyx_t_23 >= __pyx_v_board.shape[0])) __pyx_t_22 = 0;
           if (unlikely(__pyx_t_22 != -1)) {
             __Pyx_RaiseBufferIndexError(__pyx_t_22);
-            __PYX_ERR(0, 33, __pyx_L1_error)
+            __PYX_ERR(0, 35, __pyx_L1_error)
           }
           __pyx_t_9 = (((*((int *) ( /* dim=0 */ (__pyx_v_board.data + __pyx_t_23 * __pyx_v_board.strides[0]) ))) == __pyx_v_opp_tile) != 0);
           __pyx_t_8 = __pyx_t_9;
           __pyx_L21_bool_binop_done:;
           if (!__pyx_t_8) break;
 
-          /* "reversi_cython.pyx":34
+          /* "reversi_cython.pyx":36
  *                 flip = 0
  *                 while isOnBoard(inter_r, inter_c, H, W) and board[inter_idx] == opp_tile:
  *                     inter_r += dr             # <<<<<<<<<<<<<<
@@ -2762,7 +2759,7 @@ static PyObject *__pyx_f_14reversi_cython_getValidMoves(__Pyx_memviewslice __pyx
  */
           __pyx_v_inter_r = (__pyx_v_inter_r + __pyx_v_dr);
 
-          /* "reversi_cython.pyx":35
+          /* "reversi_cython.pyx":37
  *                 while isOnBoard(inter_r, inter_c, H, W) and board[inter_idx] == opp_tile:
  *                     inter_r += dr
  *                     inter_c += dc             # <<<<<<<<<<<<<<
@@ -2771,7 +2768,7 @@ static PyObject *__pyx_f_14reversi_cython_getValidMoves(__Pyx_memviewslice __pyx
  */
           __pyx_v_inter_c = (__pyx_v_inter_c + __pyx_v_dc);
 
-          /* "reversi_cython.pyx":36
+          /* "reversi_cython.pyx":38
  *                     inter_r += dr
  *                     inter_c += dc
  *                     inter_idx += di             # <<<<<<<<<<<<<<
@@ -2780,7 +2777,7 @@ static PyObject *__pyx_f_14reversi_cython_getValidMoves(__Pyx_memviewslice __pyx
  */
           __pyx_v_inter_idx = (__pyx_v_inter_idx + __pyx_v_di);
 
-          /* "reversi_cython.pyx":37
+          /* "reversi_cython.pyx":39
  *                     inter_c += dc
  *                     inter_idx += di
  *                     flip += 1             # <<<<<<<<<<<<<<
@@ -2790,7 +2787,7 @@ static PyObject *__pyx_f_14reversi_cython_getValidMoves(__Pyx_memviewslice __pyx
           __pyx_v_flip = (__pyx_v_flip + 1);
         }
 
-        /* "reversi_cython.pyx":38
+        /* "reversi_cython.pyx":40
  *                     inter_idx += di
  *                     flip += 1
  *                 if flip and isOnBoard(inter_r, inter_c, H, W) and board[inter_idx] == 0:             # <<<<<<<<<<<<<<
@@ -2817,25 +2814,25 @@ static PyObject *__pyx_f_14reversi_cython_getValidMoves(__Pyx_memviewslice __pyx
         } else if (unlikely(__pyx_t_24 >= __pyx_v_board.shape[0])) __pyx_t_22 = 0;
         if (unlikely(__pyx_t_22 != -1)) {
           __Pyx_RaiseBufferIndexError(__pyx_t_22);
-          __PYX_ERR(0, 38, __pyx_L1_error)
+          __PYX_ERR(0, 40, __pyx_L1_error)
         }
         __pyx_t_9 = (((*((int *) ( /* dim=0 */ (__pyx_v_board.data + __pyx_t_24 * __pyx_v_board.strides[0]) ))) == 0) != 0);
         __pyx_t_8 = __pyx_t_9;
         __pyx_L24_bool_binop_done:;
         if (__pyx_t_8) {
 
-          /* "reversi_cython.pyx":40
+          /* "reversi_cython.pyx":42
  *                 if flip and isOnBoard(inter_r, inter_c, H, W) and board[inter_idx] == 0:
  *                     #
  *                     if (inter_r, inter_c) not in move_dict:             # <<<<<<<<<<<<<<
  *                         move_dict[(inter_r, inter_c)] = array.array('i',[inter_idx])
  *                     grid_r, gird_c = inter_r, inter_c
  */
-          __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_inter_r); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 40, __pyx_L1_error)
+          __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_inter_r); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 42, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_2);
-          __pyx_t_11 = __Pyx_PyInt_From_int(__pyx_v_inter_c); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 40, __pyx_L1_error)
+          __pyx_t_11 = __Pyx_PyInt_From_int(__pyx_v_inter_c); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 42, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_11);
-          __pyx_t_12 = PyTuple_New(2); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 40, __pyx_L1_error)
+          __pyx_t_12 = PyTuple_New(2); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 42, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_12);
           __Pyx_GIVEREF(__pyx_t_2);
           PyTuple_SET_ITEM(__pyx_t_12, 0, __pyx_t_2);
@@ -2843,26 +2840,26 @@ static PyObject *__pyx_f_14reversi_cython_getValidMoves(__Pyx_memviewslice __pyx
           PyTuple_SET_ITEM(__pyx_t_12, 1, __pyx_t_11);
           __pyx_t_2 = 0;
           __pyx_t_11 = 0;
-          __pyx_t_8 = (__Pyx_PyDict_ContainsTF(__pyx_t_12, __pyx_v_move_dict, Py_NE)); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 40, __pyx_L1_error)
+          __pyx_t_8 = (__Pyx_PyDict_ContainsTF(__pyx_t_12, __pyx_v_move_dict, Py_NE)); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 42, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
           __pyx_t_9 = (__pyx_t_8 != 0);
           if (__pyx_t_9) {
 
-            /* "reversi_cython.pyx":41
+            /* "reversi_cython.pyx":43
  *                     #
  *                     if (inter_r, inter_c) not in move_dict:
  *                         move_dict[(inter_r, inter_c)] = array.array('i',[inter_idx])             # <<<<<<<<<<<<<<
  *                     grid_r, gird_c = inter_r, inter_c
  *                     for i in range(flip):
  */
-            __pyx_t_12 = __Pyx_PyInt_From_int(__pyx_v_inter_idx); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 41, __pyx_L1_error)
+            __pyx_t_12 = __Pyx_PyInt_From_int(__pyx_v_inter_idx); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 43, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_12);
-            __pyx_t_11 = PyList_New(1); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 41, __pyx_L1_error)
+            __pyx_t_11 = PyList_New(1); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 43, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_11);
             __Pyx_GIVEREF(__pyx_t_12);
             PyList_SET_ITEM(__pyx_t_11, 0, __pyx_t_12);
             __pyx_t_12 = 0;
-            __pyx_t_12 = PyTuple_New(2); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 41, __pyx_L1_error)
+            __pyx_t_12 = PyTuple_New(2); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 43, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_12);
             __Pyx_INCREF(__pyx_n_s_i);
             __Pyx_GIVEREF(__pyx_n_s_i);
@@ -2870,14 +2867,14 @@ static PyObject *__pyx_f_14reversi_cython_getValidMoves(__Pyx_memviewslice __pyx
             __Pyx_GIVEREF(__pyx_t_11);
             PyTuple_SET_ITEM(__pyx_t_12, 1, __pyx_t_11);
             __pyx_t_11 = 0;
-            __pyx_t_11 = __Pyx_PyObject_Call(((PyObject *)__pyx_ptype_7cpython_5array_array), __pyx_t_12, NULL); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 41, __pyx_L1_error)
+            __pyx_t_11 = __Pyx_PyObject_Call(((PyObject *)__pyx_ptype_7cpython_5array_array), __pyx_t_12, NULL); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 43, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_11);
             __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-            __pyx_t_12 = __Pyx_PyInt_From_int(__pyx_v_inter_r); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 41, __pyx_L1_error)
+            __pyx_t_12 = __Pyx_PyInt_From_int(__pyx_v_inter_r); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 43, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_12);
-            __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_inter_c); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 41, __pyx_L1_error)
+            __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_inter_c); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 43, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_2);
-            __pyx_t_4 = PyTuple_New(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 41, __pyx_L1_error)
+            __pyx_t_4 = PyTuple_New(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 43, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_4);
             __Pyx_GIVEREF(__pyx_t_12);
             PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_12);
@@ -2885,11 +2882,11 @@ static PyObject *__pyx_f_14reversi_cython_getValidMoves(__Pyx_memviewslice __pyx
             PyTuple_SET_ITEM(__pyx_t_4, 1, __pyx_t_2);
             __pyx_t_12 = 0;
             __pyx_t_2 = 0;
-            if (unlikely(PyDict_SetItem(__pyx_v_move_dict, __pyx_t_4, __pyx_t_11) < 0)) __PYX_ERR(0, 41, __pyx_L1_error)
+            if (unlikely(PyDict_SetItem(__pyx_v_move_dict, __pyx_t_4, __pyx_t_11) < 0)) __PYX_ERR(0, 43, __pyx_L1_error)
             __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
             __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
 
-            /* "reversi_cython.pyx":40
+            /* "reversi_cython.pyx":42
  *                 if flip and isOnBoard(inter_r, inter_c, H, W) and board[inter_idx] == 0:
  *                     #
  *                     if (inter_r, inter_c) not in move_dict:             # <<<<<<<<<<<<<<
@@ -2898,7 +2895,7 @@ static PyObject *__pyx_f_14reversi_cython_getValidMoves(__Pyx_memviewslice __pyx
  */
           }
 
-          /* "reversi_cython.pyx":42
+          /* "reversi_cython.pyx":44
  *                     if (inter_r, inter_c) not in move_dict:
  *                         move_dict[(inter_r, inter_c)] = array.array('i',[inter_idx])
  *                     grid_r, gird_c = inter_r, inter_c             # <<<<<<<<<<<<<<
@@ -2910,7 +2907,7 @@ static PyObject *__pyx_f_14reversi_cython_getValidMoves(__Pyx_memviewslice __pyx
           __pyx_v_grid_r = __pyx_t_22;
           __pyx_v_gird_c = __pyx_t_21;
 
-          /* "reversi_cython.pyx":43
+          /* "reversi_cython.pyx":45
  *                         move_dict[(inter_r, inter_c)] = array.array('i',[inter_idx])
  *                     grid_r, gird_c = inter_r, inter_c
  *                     for i in range(flip):             # <<<<<<<<<<<<<<
@@ -2922,7 +2919,7 @@ static PyObject *__pyx_f_14reversi_cython_getValidMoves(__Pyx_memviewslice __pyx
           for (__pyx_t_19 = 0; __pyx_t_19 < __pyx_t_22; __pyx_t_19+=1) {
             __pyx_v_i = __pyx_t_19;
 
-            /* "reversi_cython.pyx":44
+            /* "reversi_cython.pyx":46
  *                     grid_r, gird_c = inter_r, inter_c
  *                     for i in range(flip):
  *                         inter_r -= dr             # <<<<<<<<<<<<<<
@@ -2931,7 +2928,7 @@ static PyObject *__pyx_f_14reversi_cython_getValidMoves(__Pyx_memviewslice __pyx
  */
             __pyx_v_inter_r = (__pyx_v_inter_r - __pyx_v_dr);
 
-            /* "reversi_cython.pyx":45
+            /* "reversi_cython.pyx":47
  *                     for i in range(flip):
  *                         inter_r -= dr
  *                         inter_c -= dc             # <<<<<<<<<<<<<<
@@ -2940,7 +2937,7 @@ static PyObject *__pyx_f_14reversi_cython_getValidMoves(__Pyx_memviewslice __pyx
  */
             __pyx_v_inter_c = (__pyx_v_inter_c - __pyx_v_dc);
 
-            /* "reversi_cython.pyx":46
+            /* "reversi_cython.pyx":48
  *                         inter_r -= dr
  *                         inter_c -= dc
  *                         inter_idx -= di             # <<<<<<<<<<<<<<
@@ -2949,18 +2946,18 @@ static PyObject *__pyx_f_14reversi_cython_getValidMoves(__Pyx_memviewslice __pyx
  */
             __pyx_v_inter_idx = (__pyx_v_inter_idx - __pyx_v_di);
 
-            /* "reversi_cython.pyx":47
+            /* "reversi_cython.pyx":49
  *                         inter_c -= dc
  *                         inter_idx -= di
  *                         move_dict[(grid_r, gird_c)].append(inter_idx)             # <<<<<<<<<<<<<<
  *     move_dict = {k: (v,pass_info) for k,v in move_dict.items()}
  *     return move_dict if move_dict else {'PASS': ('PASS', pass_info)}
  */
-            __pyx_t_11 = __Pyx_PyInt_From_int(__pyx_v_grid_r); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 47, __pyx_L1_error)
+            __pyx_t_11 = __Pyx_PyInt_From_int(__pyx_v_grid_r); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 49, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_11);
-            __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_gird_c); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 47, __pyx_L1_error)
+            __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_gird_c); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 49, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_4);
-            __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 47, __pyx_L1_error)
+            __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 49, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_2);
             __Pyx_GIVEREF(__pyx_t_11);
             PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_11);
@@ -2968,17 +2965,17 @@ static PyObject *__pyx_f_14reversi_cython_getValidMoves(__Pyx_memviewslice __pyx
             PyTuple_SET_ITEM(__pyx_t_2, 1, __pyx_t_4);
             __pyx_t_11 = 0;
             __pyx_t_4 = 0;
-            __pyx_t_4 = __Pyx_PyDict_GetItem(__pyx_v_move_dict, __pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 47, __pyx_L1_error)
+            __pyx_t_4 = __Pyx_PyDict_GetItem(__pyx_v_move_dict, __pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 49, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_4);
             __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-            __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_inter_idx); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 47, __pyx_L1_error)
+            __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_inter_idx); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 49, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_2);
-            __pyx_t_25 = __Pyx_PyObject_Append(__pyx_t_4, __pyx_t_2); if (unlikely(__pyx_t_25 == ((int)-1))) __PYX_ERR(0, 47, __pyx_L1_error)
+            __pyx_t_25 = __Pyx_PyObject_Append(__pyx_t_4, __pyx_t_2); if (unlikely(__pyx_t_25 == ((int)-1))) __PYX_ERR(0, 49, __pyx_L1_error)
             __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
             __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
           }
 
-          /* "reversi_cython.pyx":38
+          /* "reversi_cython.pyx":40
  *                     inter_idx += di
  *                     flip += 1
  *                 if flip and isOnBoard(inter_r, inter_c, H, W) and board[inter_idx] == 0:             # <<<<<<<<<<<<<<
@@ -2987,7 +2984,7 @@ static PyObject *__pyx_f_14reversi_cython_getValidMoves(__Pyx_memviewslice __pyx
  */
         }
 
-        /* "reversi_cython.pyx":28
+        /* "reversi_cython.pyx":30
  *             if board[idx]!=tile:
  *                 continue
  *             for dr, dc, di in dirs:             # <<<<<<<<<<<<<<
@@ -3000,7 +2997,7 @@ static PyObject *__pyx_f_14reversi_cython_getValidMoves(__Pyx_memviewslice __pyx
     }
   }
 
-  /* "reversi_cython.pyx":48
+  /* "reversi_cython.pyx":50
  *                         inter_idx -= di
  *                         move_dict[(grid_r, gird_c)].append(inter_idx)
  *     move_dict = {k: (v,pass_info) for k,v in move_dict.items()}             # <<<<<<<<<<<<<<
@@ -3008,17 +3005,17 @@ static PyObject *__pyx_f_14reversi_cython_getValidMoves(__Pyx_memviewslice __pyx
  * 
  */
   { /* enter inner scope */
-    __pyx_t_1 = PyDict_New(); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 48, __pyx_L32_error)
+    __pyx_t_1 = PyDict_New(); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 50, __pyx_L32_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_2 = __Pyx_PyDict_Items(__pyx_v_move_dict); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 48, __pyx_L32_error)
+    __pyx_t_2 = __Pyx_PyDict_Items(__pyx_v_move_dict); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 50, __pyx_L32_error)
     __Pyx_GOTREF(__pyx_t_2);
     if (likely(PyList_CheckExact(__pyx_t_2)) || PyTuple_CheckExact(__pyx_t_2)) {
       __pyx_t_4 = __pyx_t_2; __Pyx_INCREF(__pyx_t_4); __pyx_t_3 = 0;
       __pyx_t_26 = NULL;
     } else {
-      __pyx_t_3 = -1; __pyx_t_4 = PyObject_GetIter(__pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 48, __pyx_L32_error)
+      __pyx_t_3 = -1; __pyx_t_4 = PyObject_GetIter(__pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 50, __pyx_L32_error)
       __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_26 = Py_TYPE(__pyx_t_4)->tp_iternext; if (unlikely(!__pyx_t_26)) __PYX_ERR(0, 48, __pyx_L32_error)
+      __pyx_t_26 = Py_TYPE(__pyx_t_4)->tp_iternext; if (unlikely(!__pyx_t_26)) __PYX_ERR(0, 50, __pyx_L32_error)
     }
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     for (;;) {
@@ -3026,17 +3023,17 @@ static PyObject *__pyx_f_14reversi_cython_getValidMoves(__Pyx_memviewslice __pyx
         if (likely(PyList_CheckExact(__pyx_t_4))) {
           if (__pyx_t_3 >= PyList_GET_SIZE(__pyx_t_4)) break;
           #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-          __pyx_t_2 = PyList_GET_ITEM(__pyx_t_4, __pyx_t_3); __Pyx_INCREF(__pyx_t_2); __pyx_t_3++; if (unlikely(0 < 0)) __PYX_ERR(0, 48, __pyx_L32_error)
+          __pyx_t_2 = PyList_GET_ITEM(__pyx_t_4, __pyx_t_3); __Pyx_INCREF(__pyx_t_2); __pyx_t_3++; if (unlikely(0 < 0)) __PYX_ERR(0, 50, __pyx_L32_error)
           #else
-          __pyx_t_2 = PySequence_ITEM(__pyx_t_4, __pyx_t_3); __pyx_t_3++; if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 48, __pyx_L32_error)
+          __pyx_t_2 = PySequence_ITEM(__pyx_t_4, __pyx_t_3); __pyx_t_3++; if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 50, __pyx_L32_error)
           __Pyx_GOTREF(__pyx_t_2);
           #endif
         } else {
           if (__pyx_t_3 >= PyTuple_GET_SIZE(__pyx_t_4)) break;
           #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-          __pyx_t_2 = PyTuple_GET_ITEM(__pyx_t_4, __pyx_t_3); __Pyx_INCREF(__pyx_t_2); __pyx_t_3++; if (unlikely(0 < 0)) __PYX_ERR(0, 48, __pyx_L32_error)
+          __pyx_t_2 = PyTuple_GET_ITEM(__pyx_t_4, __pyx_t_3); __Pyx_INCREF(__pyx_t_2); __pyx_t_3++; if (unlikely(0 < 0)) __PYX_ERR(0, 50, __pyx_L32_error)
           #else
-          __pyx_t_2 = PySequence_ITEM(__pyx_t_4, __pyx_t_3); __pyx_t_3++; if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 48, __pyx_L32_error)
+          __pyx_t_2 = PySequence_ITEM(__pyx_t_4, __pyx_t_3); __pyx_t_3++; if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 50, __pyx_L32_error)
           __Pyx_GOTREF(__pyx_t_2);
           #endif
         }
@@ -3046,7 +3043,7 @@ static PyObject *__pyx_f_14reversi_cython_getValidMoves(__Pyx_memviewslice __pyx
           PyObject* exc_type = PyErr_Occurred();
           if (exc_type) {
             if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-            else __PYX_ERR(0, 48, __pyx_L32_error)
+            else __PYX_ERR(0, 50, __pyx_L32_error)
           }
           break;
         }
@@ -3058,7 +3055,7 @@ static PyObject *__pyx_f_14reversi_cython_getValidMoves(__Pyx_memviewslice __pyx
         if (unlikely(size != 2)) {
           if (size > 2) __Pyx_RaiseTooManyValuesError(2);
           else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-          __PYX_ERR(0, 48, __pyx_L32_error)
+          __PYX_ERR(0, 50, __pyx_L32_error)
         }
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
         if (likely(PyTuple_CheckExact(sequence))) {
@@ -3071,15 +3068,15 @@ static PyObject *__pyx_f_14reversi_cython_getValidMoves(__Pyx_memviewslice __pyx
         __Pyx_INCREF(__pyx_t_11);
         __Pyx_INCREF(__pyx_t_12);
         #else
-        __pyx_t_11 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 48, __pyx_L32_error)
+        __pyx_t_11 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 50, __pyx_L32_error)
         __Pyx_GOTREF(__pyx_t_11);
-        __pyx_t_12 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 48, __pyx_L32_error)
+        __pyx_t_12 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 50, __pyx_L32_error)
         __Pyx_GOTREF(__pyx_t_12);
         #endif
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       } else {
         Py_ssize_t index = -1;
-        __pyx_t_10 = PyObject_GetIter(__pyx_t_2); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 48, __pyx_L32_error)
+        __pyx_t_10 = PyObject_GetIter(__pyx_t_2); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 50, __pyx_L32_error)
         __Pyx_GOTREF(__pyx_t_10);
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
         __pyx_t_20 = Py_TYPE(__pyx_t_10)->tp_iternext;
@@ -3087,7 +3084,7 @@ static PyObject *__pyx_f_14reversi_cython_getValidMoves(__Pyx_memviewslice __pyx
         __Pyx_GOTREF(__pyx_t_11);
         index = 1; __pyx_t_12 = __pyx_t_20(__pyx_t_10); if (unlikely(!__pyx_t_12)) goto __pyx_L35_unpacking_failed;
         __Pyx_GOTREF(__pyx_t_12);
-        if (__Pyx_IternextUnpackEndCheck(__pyx_t_20(__pyx_t_10), 2) < 0) __PYX_ERR(0, 48, __pyx_L32_error)
+        if (__Pyx_IternextUnpackEndCheck(__pyx_t_20(__pyx_t_10), 2) < 0) __PYX_ERR(0, 50, __pyx_L32_error)
         __pyx_t_20 = NULL;
         __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
         goto __pyx_L36_unpacking_done;
@@ -3095,16 +3092,16 @@ static PyObject *__pyx_f_14reversi_cython_getValidMoves(__Pyx_memviewslice __pyx
         __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
         __pyx_t_20 = NULL;
         if (__Pyx_IterFinish() == 0) __Pyx_RaiseNeedMoreValuesError(index);
-        __PYX_ERR(0, 48, __pyx_L32_error)
+        __PYX_ERR(0, 50, __pyx_L32_error)
         __pyx_L36_unpacking_done:;
       }
       __Pyx_XDECREF_SET(__pyx_7genexpr__pyx_v_k, __pyx_t_11);
       __pyx_t_11 = 0;
       __Pyx_XDECREF_SET(__pyx_7genexpr__pyx_v_v, __pyx_t_12);
       __pyx_t_12 = 0;
-      __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_pass_info); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 48, __pyx_L32_error)
+      __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_pass_info); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 50, __pyx_L32_error)
       __Pyx_GOTREF(__pyx_t_2);
-      __pyx_t_12 = PyTuple_New(2); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 48, __pyx_L32_error)
+      __pyx_t_12 = PyTuple_New(2); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 50, __pyx_L32_error)
       __Pyx_GOTREF(__pyx_t_12);
       __Pyx_INCREF(__pyx_7genexpr__pyx_v_v);
       __Pyx_GIVEREF(__pyx_7genexpr__pyx_v_v);
@@ -3112,7 +3109,7 @@ static PyObject *__pyx_f_14reversi_cython_getValidMoves(__Pyx_memviewslice __pyx
       __Pyx_GIVEREF(__pyx_t_2);
       PyTuple_SET_ITEM(__pyx_t_12, 1, __pyx_t_2);
       __pyx_t_2 = 0;
-      if (unlikely(PyDict_SetItem(__pyx_t_1, (PyObject*)__pyx_7genexpr__pyx_v_k, (PyObject*)__pyx_t_12))) __PYX_ERR(0, 48, __pyx_L32_error)
+      if (unlikely(PyDict_SetItem(__pyx_t_1, (PyObject*)__pyx_7genexpr__pyx_v_k, (PyObject*)__pyx_t_12))) __PYX_ERR(0, 50, __pyx_L32_error)
       __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
     }
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
@@ -3128,24 +3125,24 @@ static PyObject *__pyx_f_14reversi_cython_getValidMoves(__Pyx_memviewslice __pyx
   __Pyx_DECREF_SET(__pyx_v_move_dict, ((PyObject*)__pyx_t_1));
   __pyx_t_1 = 0;
 
-  /* "reversi_cython.pyx":49
+  /* "reversi_cython.pyx":51
  *                         move_dict[(grid_r, gird_c)].append(inter_idx)
  *     move_dict = {k: (v,pass_info) for k,v in move_dict.items()}
  *     return move_dict if move_dict else {'PASS': ('PASS', pass_info)}             # <<<<<<<<<<<<<<
  * 
- * cpdef count_tile(int[:] board, int tile):
+ * 
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_v_move_dict); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 49, __pyx_L1_error)
+  __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_v_move_dict); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 51, __pyx_L1_error)
   if (__pyx_t_9) {
     __Pyx_INCREF(__pyx_v_move_dict);
     __pyx_t_1 = __pyx_v_move_dict;
   } else {
-    __pyx_t_4 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 49, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 51, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_12 = __Pyx_PyInt_From_int(__pyx_v_pass_info); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 49, __pyx_L1_error)
+    __pyx_t_12 = __Pyx_PyInt_From_int(__pyx_v_pass_info); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 51, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_12);
-    __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 49, __pyx_L1_error)
+    __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 51, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_INCREF(__pyx_n_s_PASS);
     __Pyx_GIVEREF(__pyx_n_s_PASS);
@@ -3153,7 +3150,7 @@ static PyObject *__pyx_f_14reversi_cython_getValidMoves(__Pyx_memviewslice __pyx
     __Pyx_GIVEREF(__pyx_t_12);
     PyTuple_SET_ITEM(__pyx_t_2, 1, __pyx_t_12);
     __pyx_t_12 = 0;
-    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_PASS, __pyx_t_2) < 0) __PYX_ERR(0, 49, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_PASS, __pyx_t_2) < 0) __PYX_ERR(0, 51, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __pyx_t_1 = __pyx_t_4;
     __pyx_t_4 = 0;
@@ -3162,8 +3159,8 @@ static PyObject *__pyx_f_14reversi_cython_getValidMoves(__Pyx_memviewslice __pyx
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "reversi_cython.pyx":7
- *     return 0 <= r < H and 0 <= c < W
+  /* "reversi_cython.pyx":9
+ * 
  * 
  * cpdef getValidMoves(int[:] board, int height, int width, int playerColor, int pass_info):             # <<<<<<<<<<<<<<
  *     """
@@ -3232,29 +3229,29 @@ static PyObject *__pyx_pw_14reversi_cython_1getValidMoves(PyObject *__pyx_self, 
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_height)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("getValidMoves", 1, 5, 5, 1); __PYX_ERR(0, 7, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("getValidMoves", 1, 5, 5, 1); __PYX_ERR(0, 9, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_width)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("getValidMoves", 1, 5, 5, 2); __PYX_ERR(0, 7, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("getValidMoves", 1, 5, 5, 2); __PYX_ERR(0, 9, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
         if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_playerColor)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("getValidMoves", 1, 5, 5, 3); __PYX_ERR(0, 7, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("getValidMoves", 1, 5, 5, 3); __PYX_ERR(0, 9, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  4:
         if (likely((values[4] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_pass_info)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("getValidMoves", 1, 5, 5, 4); __PYX_ERR(0, 7, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("getValidMoves", 1, 5, 5, 4); __PYX_ERR(0, 9, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "getValidMoves") < 0)) __PYX_ERR(0, 7, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "getValidMoves") < 0)) __PYX_ERR(0, 9, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 5) {
       goto __pyx_L5_argtuple_error;
@@ -3265,15 +3262,15 @@ static PyObject *__pyx_pw_14reversi_cython_1getValidMoves(PyObject *__pyx_self, 
       values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
       values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
     }
-    __pyx_v_board = __Pyx_PyObject_to_MemoryviewSlice_ds_int(values[0], PyBUF_WRITABLE); if (unlikely(!__pyx_v_board.memview)) __PYX_ERR(0, 7, __pyx_L3_error)
-    __pyx_v_height = __Pyx_PyInt_As_int(values[1]); if (unlikely((__pyx_v_height == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 7, __pyx_L3_error)
-    __pyx_v_width = __Pyx_PyInt_As_int(values[2]); if (unlikely((__pyx_v_width == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 7, __pyx_L3_error)
-    __pyx_v_playerColor = __Pyx_PyInt_As_int(values[3]); if (unlikely((__pyx_v_playerColor == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 7, __pyx_L3_error)
-    __pyx_v_pass_info = __Pyx_PyInt_As_int(values[4]); if (unlikely((__pyx_v_pass_info == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 7, __pyx_L3_error)
+    __pyx_v_board = __Pyx_PyObject_to_MemoryviewSlice_ds_int(values[0], PyBUF_WRITABLE); if (unlikely(!__pyx_v_board.memview)) __PYX_ERR(0, 9, __pyx_L3_error)
+    __pyx_v_height = __Pyx_PyInt_As_int(values[1]); if (unlikely((__pyx_v_height == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 9, __pyx_L3_error)
+    __pyx_v_width = __Pyx_PyInt_As_int(values[2]); if (unlikely((__pyx_v_width == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 9, __pyx_L3_error)
+    __pyx_v_playerColor = __Pyx_PyInt_As_int(values[3]); if (unlikely((__pyx_v_playerColor == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 9, __pyx_L3_error)
+    __pyx_v_pass_info = __Pyx_PyInt_As_int(values[4]); if (unlikely((__pyx_v_pass_info == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 9, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("getValidMoves", 1, 5, 5, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 7, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("getValidMoves", 1, 5, 5, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 9, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("reversi_cython.getValidMoves", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -3292,8 +3289,8 @@ static PyObject *__pyx_pf_14reversi_cython_getValidMoves(CYTHON_UNUSED PyObject 
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("getValidMoves", 0);
   __Pyx_XDECREF(__pyx_r);
-  if (unlikely(!__pyx_v_board.memview)) { __Pyx_RaiseUnboundLocalError("board"); __PYX_ERR(0, 7, __pyx_L1_error) }
-  __pyx_t_1 = __pyx_f_14reversi_cython_getValidMoves(__pyx_v_board, __pyx_v_height, __pyx_v_width, __pyx_v_playerColor, __pyx_v_pass_info, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 7, __pyx_L1_error)
+  if (unlikely(!__pyx_v_board.memview)) { __Pyx_RaiseUnboundLocalError("board"); __PYX_ERR(0, 9, __pyx_L1_error) }
+  __pyx_t_1 = __pyx_f_14reversi_cython_getValidMoves(__pyx_v_board, __pyx_v_height, __pyx_v_width, __pyx_v_playerColor, __pyx_v_pass_info, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 9, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -3311,8 +3308,8 @@ static PyObject *__pyx_pf_14reversi_cython_getValidMoves(CYTHON_UNUSED PyObject 
   return __pyx_r;
 }
 
-/* "reversi_cython.pyx":51
- *     return move_dict if move_dict else {'PASS': ('PASS', pass_info)}
+/* "reversi_cython.pyx":54
+ * 
  * 
  * cpdef count_tile(int[:] board, int tile):             # <<<<<<<<<<<<<<
  *     cdef int score = 0
@@ -3323,181 +3320,144 @@ static PyObject *__pyx_pw_14reversi_cython_3count_tile(PyObject *__pyx_self, PyO
 static PyObject *__pyx_f_14reversi_cython_count_tile(__Pyx_memviewslice __pyx_v_board, int __pyx_v_tile, CYTHON_UNUSED int __pyx_skip_dispatch) {
   int __pyx_v_score;
   int __pyx_v_opp;
-  PyObject *__pyx_v_e = NULL;
+  int __pyx_v_i;
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  PyObject *__pyx_t_2 = NULL;
-  Py_ssize_t __pyx_t_3;
-  PyObject *(*__pyx_t_4)(PyObject *);
-  PyObject *__pyx_t_5 = NULL;
+  size_t __pyx_t_1;
+  Py_ssize_t __pyx_t_2;
+  int __pyx_t_3;
+  Py_ssize_t __pyx_t_4;
+  int __pyx_t_5;
   int __pyx_t_6;
+  Py_ssize_t __pyx_t_7;
+  PyObject *__pyx_t_8 = NULL;
   __Pyx_RefNannySetupContext("count_tile", 0);
 
-  /* "reversi_cython.pyx":52
+  /* "reversi_cython.pyx":55
  * 
  * cpdef count_tile(int[:] board, int tile):
  *     cdef int score = 0             # <<<<<<<<<<<<<<
  *     cdef int opp = tile^3
- *     for e in board:
+ *     cdef int i
  */
   __pyx_v_score = 0;
 
-  /* "reversi_cython.pyx":53
+  /* "reversi_cython.pyx":56
  * cpdef count_tile(int[:] board, int tile):
  *     cdef int score = 0
  *     cdef int opp = tile^3             # <<<<<<<<<<<<<<
- *     for e in board:
- *         if e==tile:
+ *     cdef int i
+ *     for i in range(len(board)):
  */
   __pyx_v_opp = (__pyx_v_tile ^ 3);
 
-  /* "reversi_cython.pyx":54
- *     cdef int score = 0
+  /* "reversi_cython.pyx":58
  *     cdef int opp = tile^3
- *     for e in board:             # <<<<<<<<<<<<<<
- *         if e==tile:
+ *     cdef int i
+ *     for i in range(len(board)):             # <<<<<<<<<<<<<<
+ *         if board[i]==tile:
  *             score += 1
  */
-  __pyx_t_1 = __pyx_memoryview_fromslice(__pyx_v_board, 1, (PyObject *(*)(char *)) __pyx_memview_get_int, (int (*)(char *, PyObject *)) __pyx_memview_set_int, 0);; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 54, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (likely(PyList_CheckExact(__pyx_t_1)) || PyTuple_CheckExact(__pyx_t_1)) {
-    __pyx_t_2 = __pyx_t_1; __Pyx_INCREF(__pyx_t_2); __pyx_t_3 = 0;
-    __pyx_t_4 = NULL;
-  } else {
-    __pyx_t_3 = -1; __pyx_t_2 = PyObject_GetIter(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 54, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_4 = Py_TYPE(__pyx_t_2)->tp_iternext; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 54, __pyx_L1_error)
-  }
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  for (;;) {
-    if (likely(!__pyx_t_4)) {
-      if (likely(PyList_CheckExact(__pyx_t_2))) {
-        if (__pyx_t_3 >= PyList_GET_SIZE(__pyx_t_2)) break;
-        #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_1 = PyList_GET_ITEM(__pyx_t_2, __pyx_t_3); __Pyx_INCREF(__pyx_t_1); __pyx_t_3++; if (unlikely(0 < 0)) __PYX_ERR(0, 54, __pyx_L1_error)
-        #else
-        __pyx_t_1 = PySequence_ITEM(__pyx_t_2, __pyx_t_3); __pyx_t_3++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 54, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_1);
-        #endif
-      } else {
-        if (__pyx_t_3 >= PyTuple_GET_SIZE(__pyx_t_2)) break;
-        #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_1 = PyTuple_GET_ITEM(__pyx_t_2, __pyx_t_3); __Pyx_INCREF(__pyx_t_1); __pyx_t_3++; if (unlikely(0 < 0)) __PYX_ERR(0, 54, __pyx_L1_error)
-        #else
-        __pyx_t_1 = PySequence_ITEM(__pyx_t_2, __pyx_t_3); __pyx_t_3++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 54, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_1);
-        #endif
-      }
-    } else {
-      __pyx_t_1 = __pyx_t_4(__pyx_t_2);
-      if (unlikely(!__pyx_t_1)) {
-        PyObject* exc_type = PyErr_Occurred();
-        if (exc_type) {
-          if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else __PYX_ERR(0, 54, __pyx_L1_error)
-        }
-        break;
-      }
-      __Pyx_GOTREF(__pyx_t_1);
-    }
-    __Pyx_XDECREF_SET(__pyx_v_e, __pyx_t_1);
-    __pyx_t_1 = 0;
+  __pyx_t_1 = __Pyx_MemoryView_Len(__pyx_v_board); 
+  __pyx_t_2 = __pyx_t_1;
+  for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
+    __pyx_v_i = __pyx_t_3;
 
-    /* "reversi_cython.pyx":55
- *     cdef int opp = tile^3
- *     for e in board:
- *         if e==tile:             # <<<<<<<<<<<<<<
+    /* "reversi_cython.pyx":59
+ *     cdef int i
+ *     for i in range(len(board)):
+ *         if board[i]==tile:             # <<<<<<<<<<<<<<
  *             score += 1
- *         elif e==opp:
+ *         elif board[i]==opp:
  */
-    __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_tile); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 55, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_5 = PyObject_RichCompare(__pyx_v_e, __pyx_t_1, Py_EQ); __Pyx_XGOTREF(__pyx_t_5); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 55, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_5); if (unlikely(__pyx_t_6 < 0)) __PYX_ERR(0, 55, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    __pyx_t_4 = __pyx_v_i;
+    __pyx_t_5 = -1;
+    if (__pyx_t_4 < 0) {
+      __pyx_t_4 += __pyx_v_board.shape[0];
+      if (unlikely(__pyx_t_4 < 0)) __pyx_t_5 = 0;
+    } else if (unlikely(__pyx_t_4 >= __pyx_v_board.shape[0])) __pyx_t_5 = 0;
+    if (unlikely(__pyx_t_5 != -1)) {
+      __Pyx_RaiseBufferIndexError(__pyx_t_5);
+      __PYX_ERR(0, 59, __pyx_L1_error)
+    }
+    __pyx_t_6 = (((*((int *) ( /* dim=0 */ (__pyx_v_board.data + __pyx_t_4 * __pyx_v_board.strides[0]) ))) == __pyx_v_tile) != 0);
     if (__pyx_t_6) {
 
-      /* "reversi_cython.pyx":56
- *     for e in board:
- *         if e==tile:
+      /* "reversi_cython.pyx":60
+ *     for i in range(len(board)):
+ *         if board[i]==tile:
  *             score += 1             # <<<<<<<<<<<<<<
- *         elif e==opp:
+ *         elif board[i]==opp:
  *             score -= 1
  */
       __pyx_v_score = (__pyx_v_score + 1);
 
-      /* "reversi_cython.pyx":55
- *     cdef int opp = tile^3
- *     for e in board:
- *         if e==tile:             # <<<<<<<<<<<<<<
+      /* "reversi_cython.pyx":59
+ *     cdef int i
+ *     for i in range(len(board)):
+ *         if board[i]==tile:             # <<<<<<<<<<<<<<
  *             score += 1
- *         elif e==opp:
+ *         elif board[i]==opp:
  */
       goto __pyx_L5;
     }
 
-    /* "reversi_cython.pyx":57
- *         if e==tile:
+    /* "reversi_cython.pyx":61
+ *         if board[i]==tile:
  *             score += 1
- *         elif e==opp:             # <<<<<<<<<<<<<<
+ *         elif board[i]==opp:             # <<<<<<<<<<<<<<
  *             score -= 1
  *     return score
  */
-    __pyx_t_5 = __Pyx_PyInt_From_int(__pyx_v_opp); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 57, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_1 = PyObject_RichCompare(__pyx_v_e, __pyx_t_5, Py_EQ); __Pyx_XGOTREF(__pyx_t_1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 57, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_6 < 0)) __PYX_ERR(0, 57, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    __pyx_t_7 = __pyx_v_i;
+    __pyx_t_5 = -1;
+    if (__pyx_t_7 < 0) {
+      __pyx_t_7 += __pyx_v_board.shape[0];
+      if (unlikely(__pyx_t_7 < 0)) __pyx_t_5 = 0;
+    } else if (unlikely(__pyx_t_7 >= __pyx_v_board.shape[0])) __pyx_t_5 = 0;
+    if (unlikely(__pyx_t_5 != -1)) {
+      __Pyx_RaiseBufferIndexError(__pyx_t_5);
+      __PYX_ERR(0, 61, __pyx_L1_error)
+    }
+    __pyx_t_6 = (((*((int *) ( /* dim=0 */ (__pyx_v_board.data + __pyx_t_7 * __pyx_v_board.strides[0]) ))) == __pyx_v_opp) != 0);
     if (__pyx_t_6) {
 
-      /* "reversi_cython.pyx":58
+      /* "reversi_cython.pyx":62
  *             score += 1
- *         elif e==opp:
+ *         elif board[i]==opp:
  *             score -= 1             # <<<<<<<<<<<<<<
  *     return score
  * 
  */
       __pyx_v_score = (__pyx_v_score - 1);
 
-      /* "reversi_cython.pyx":57
- *         if e==tile:
+      /* "reversi_cython.pyx":61
+ *         if board[i]==tile:
  *             score += 1
- *         elif e==opp:             # <<<<<<<<<<<<<<
+ *         elif board[i]==opp:             # <<<<<<<<<<<<<<
  *             score -= 1
  *     return score
  */
     }
     __pyx_L5:;
-
-    /* "reversi_cython.pyx":54
- *     cdef int score = 0
- *     cdef int opp = tile^3
- *     for e in board:             # <<<<<<<<<<<<<<
- *         if e==tile:
- *             score += 1
- */
   }
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "reversi_cython.pyx":59
- *         elif e==opp:
+  /* "reversi_cython.pyx":63
+ *         elif board[i]==opp:
  *             score -= 1
  *     return score             # <<<<<<<<<<<<<<
  * 
- * cpdef eval_func(int[:] board, int height, int width, int tile, int[:] w_board):
+ * 
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_score); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 59, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_r = __pyx_t_2;
-  __pyx_t_2 = 0;
+  __pyx_t_8 = __Pyx_PyInt_From_int(__pyx_v_score); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 63, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_8);
+  __pyx_r = __pyx_t_8;
+  __pyx_t_8 = 0;
   goto __pyx_L0;
 
-  /* "reversi_cython.pyx":51
- *     return move_dict if move_dict else {'PASS': ('PASS', pass_info)}
+  /* "reversi_cython.pyx":54
+ * 
  * 
  * cpdef count_tile(int[:] board, int tile):             # <<<<<<<<<<<<<<
  *     cdef int score = 0
@@ -3506,13 +3466,10 @@ static PyObject *__pyx_f_14reversi_cython_count_tile(__Pyx_memviewslice __pyx_v_
 
   /* function exit code */
   __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_5);
+  __Pyx_XDECREF(__pyx_t_8);
   __Pyx_AddTraceback("reversi_cython.count_tile", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
   __pyx_L0:;
-  __Pyx_XDECREF(__pyx_v_e);
   __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
@@ -3549,11 +3506,11 @@ static PyObject *__pyx_pw_14reversi_cython_3count_tile(PyObject *__pyx_self, PyO
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_tile)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("count_tile", 1, 2, 2, 1); __PYX_ERR(0, 51, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("count_tile", 1, 2, 2, 1); __PYX_ERR(0, 54, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "count_tile") < 0)) __PYX_ERR(0, 51, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "count_tile") < 0)) __PYX_ERR(0, 54, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
       goto __pyx_L5_argtuple_error;
@@ -3561,12 +3518,12 @@ static PyObject *__pyx_pw_14reversi_cython_3count_tile(PyObject *__pyx_self, PyO
       values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
       values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
     }
-    __pyx_v_board = __Pyx_PyObject_to_MemoryviewSlice_ds_int(values[0], PyBUF_WRITABLE); if (unlikely(!__pyx_v_board.memview)) __PYX_ERR(0, 51, __pyx_L3_error)
-    __pyx_v_tile = __Pyx_PyInt_As_int(values[1]); if (unlikely((__pyx_v_tile == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 51, __pyx_L3_error)
+    __pyx_v_board = __Pyx_PyObject_to_MemoryviewSlice_ds_int(values[0], PyBUF_WRITABLE); if (unlikely(!__pyx_v_board.memview)) __PYX_ERR(0, 54, __pyx_L3_error)
+    __pyx_v_tile = __Pyx_PyInt_As_int(values[1]); if (unlikely((__pyx_v_tile == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 54, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("count_tile", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 51, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("count_tile", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 54, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("reversi_cython.count_tile", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -3585,8 +3542,8 @@ static PyObject *__pyx_pf_14reversi_cython_2count_tile(CYTHON_UNUSED PyObject *_
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("count_tile", 0);
   __Pyx_XDECREF(__pyx_r);
-  if (unlikely(!__pyx_v_board.memview)) { __Pyx_RaiseUnboundLocalError("board"); __PYX_ERR(0, 51, __pyx_L1_error) }
-  __pyx_t_1 = __pyx_f_14reversi_cython_count_tile(__pyx_v_board, __pyx_v_tile, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 51, __pyx_L1_error)
+  if (unlikely(!__pyx_v_board.memview)) { __Pyx_RaiseUnboundLocalError("board"); __PYX_ERR(0, 54, __pyx_L1_error) }
+  __pyx_t_1 = __pyx_f_14reversi_cython_count_tile(__pyx_v_board, __pyx_v_tile, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 54, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -3604,290 +3561,189 @@ static PyObject *__pyx_pf_14reversi_cython_2count_tile(CYTHON_UNUSED PyObject *_
   return __pyx_r;
 }
 
-/* "reversi_cython.pyx":61
- *     return score
+/* "reversi_cython.pyx":66
  * 
- * cpdef eval_func(int[:] board, int height, int width, int tile, int[:] w_board):             # <<<<<<<<<<<<<<
+ * 
+ * cpdef eval_func(int[:] board, int tile, int[:] w_board):             # <<<<<<<<<<<<<<
  *     cdef int score = 0
  *     cdef int opp = tile^3
  */
 
 static PyObject *__pyx_pw_14reversi_cython_5eval_func(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyObject *__pyx_f_14reversi_cython_eval_func(__Pyx_memviewslice __pyx_v_board, CYTHON_UNUSED int __pyx_v_height, CYTHON_UNUSED int __pyx_v_width, int __pyx_v_tile, __Pyx_memviewslice __pyx_v_w_board, CYTHON_UNUSED int __pyx_skip_dispatch) {
+static PyObject *__pyx_f_14reversi_cython_eval_func(__Pyx_memviewslice __pyx_v_board, int __pyx_v_tile, __Pyx_memviewslice __pyx_v_w_board, CYTHON_UNUSED int __pyx_skip_dispatch) {
   int __pyx_v_score;
   int __pyx_v_opp;
-  PyObject *__pyx_v_e = NULL;
-  PyObject *__pyx_v_w = NULL;
+  int __pyx_v_i;
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  PyObject *__pyx_t_2 = NULL;
-  PyObject *__pyx_t_3 = NULL;
+  size_t __pyx_t_1;
+  Py_ssize_t __pyx_t_2;
+  int __pyx_t_3;
   Py_ssize_t __pyx_t_4;
-  PyObject *(*__pyx_t_5)(PyObject *);
-  PyObject *__pyx_t_6 = NULL;
-  PyObject *__pyx_t_7 = NULL;
-  PyObject *(*__pyx_t_8)(PyObject *);
-  int __pyx_t_9;
-  int __pyx_t_10;
+  int __pyx_t_5;
+  int __pyx_t_6;
+  Py_ssize_t __pyx_t_7;
+  Py_ssize_t __pyx_t_8;
+  Py_ssize_t __pyx_t_9;
+  PyObject *__pyx_t_10 = NULL;
   __Pyx_RefNannySetupContext("eval_func", 0);
 
-  /* "reversi_cython.pyx":62
+  /* "reversi_cython.pyx":67
  * 
- * cpdef eval_func(int[:] board, int height, int width, int tile, int[:] w_board):
+ * cpdef eval_func(int[:] board, int tile, int[:] w_board):
  *     cdef int score = 0             # <<<<<<<<<<<<<<
  *     cdef int opp = tile^3
- *     for e, w in zip(board, w_board):
+ *     cdef int i
  */
   __pyx_v_score = 0;
 
-  /* "reversi_cython.pyx":63
- * cpdef eval_func(int[:] board, int height, int width, int tile, int[:] w_board):
+  /* "reversi_cython.pyx":68
+ * cpdef eval_func(int[:] board, int tile, int[:] w_board):
  *     cdef int score = 0
  *     cdef int opp = tile^3             # <<<<<<<<<<<<<<
- *     for e, w in zip(board, w_board):
- *         if e==tile:
+ *     cdef int i
+ *     for i in range(len(board)):
  */
   __pyx_v_opp = (__pyx_v_tile ^ 3);
 
-  /* "reversi_cython.pyx":64
- *     cdef int score = 0
+  /* "reversi_cython.pyx":70
  *     cdef int opp = tile^3
- *     for e, w in zip(board, w_board):             # <<<<<<<<<<<<<<
- *         if e==tile:
- *             score += w
+ *     cdef int i
+ *     for i in range(len(board)):             # <<<<<<<<<<<<<<
+ *         if board[i]==tile:
+ *             score += w_board[i]
  */
-  __pyx_t_1 = __pyx_memoryview_fromslice(__pyx_v_board, 1, (PyObject *(*)(char *)) __pyx_memview_get_int, (int (*)(char *, PyObject *)) __pyx_memview_set_int, 0);; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 64, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __pyx_memoryview_fromslice(__pyx_v_w_board, 1, (PyObject *(*)(char *)) __pyx_memview_get_int, (int (*)(char *, PyObject *)) __pyx_memview_set_int, 0);; if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 64, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 64, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_GIVEREF(__pyx_t_1);
-  PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_1);
-  __Pyx_GIVEREF(__pyx_t_2);
-  PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_t_2);
-  __pyx_t_1 = 0;
-  __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_zip, __pyx_t_3, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 64, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (likely(PyList_CheckExact(__pyx_t_2)) || PyTuple_CheckExact(__pyx_t_2)) {
-    __pyx_t_3 = __pyx_t_2; __Pyx_INCREF(__pyx_t_3); __pyx_t_4 = 0;
-    __pyx_t_5 = NULL;
-  } else {
-    __pyx_t_4 = -1; __pyx_t_3 = PyObject_GetIter(__pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 64, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_5 = Py_TYPE(__pyx_t_3)->tp_iternext; if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 64, __pyx_L1_error)
-  }
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  for (;;) {
-    if (likely(!__pyx_t_5)) {
-      if (likely(PyList_CheckExact(__pyx_t_3))) {
-        if (__pyx_t_4 >= PyList_GET_SIZE(__pyx_t_3)) break;
-        #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_2 = PyList_GET_ITEM(__pyx_t_3, __pyx_t_4); __Pyx_INCREF(__pyx_t_2); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(0, 64, __pyx_L1_error)
-        #else
-        __pyx_t_2 = PySequence_ITEM(__pyx_t_3, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 64, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_2);
-        #endif
-      } else {
-        if (__pyx_t_4 >= PyTuple_GET_SIZE(__pyx_t_3)) break;
-        #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_2 = PyTuple_GET_ITEM(__pyx_t_3, __pyx_t_4); __Pyx_INCREF(__pyx_t_2); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(0, 64, __pyx_L1_error)
-        #else
-        __pyx_t_2 = PySequence_ITEM(__pyx_t_3, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 64, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_2);
-        #endif
-      }
-    } else {
-      __pyx_t_2 = __pyx_t_5(__pyx_t_3);
-      if (unlikely(!__pyx_t_2)) {
-        PyObject* exc_type = PyErr_Occurred();
-        if (exc_type) {
-          if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else __PYX_ERR(0, 64, __pyx_L1_error)
-        }
-        break;
-      }
-      __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_1 = __Pyx_MemoryView_Len(__pyx_v_board); 
+  __pyx_t_2 = __pyx_t_1;
+  for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
+    __pyx_v_i = __pyx_t_3;
+
+    /* "reversi_cython.pyx":71
+ *     cdef int i
+ *     for i in range(len(board)):
+ *         if board[i]==tile:             # <<<<<<<<<<<<<<
+ *             score += w_board[i]
+ *         elif board[i]==opp:
+ */
+    __pyx_t_4 = __pyx_v_i;
+    __pyx_t_5 = -1;
+    if (__pyx_t_4 < 0) {
+      __pyx_t_4 += __pyx_v_board.shape[0];
+      if (unlikely(__pyx_t_4 < 0)) __pyx_t_5 = 0;
+    } else if (unlikely(__pyx_t_4 >= __pyx_v_board.shape[0])) __pyx_t_5 = 0;
+    if (unlikely(__pyx_t_5 != -1)) {
+      __Pyx_RaiseBufferIndexError(__pyx_t_5);
+      __PYX_ERR(0, 71, __pyx_L1_error)
     }
-    if ((likely(PyTuple_CheckExact(__pyx_t_2))) || (PyList_CheckExact(__pyx_t_2))) {
-      PyObject* sequence = __pyx_t_2;
-      Py_ssize_t size = __Pyx_PySequence_SIZE(sequence);
-      if (unlikely(size != 2)) {
-        if (size > 2) __Pyx_RaiseTooManyValuesError(2);
-        else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-        __PYX_ERR(0, 64, __pyx_L1_error)
+    __pyx_t_6 = (((*((int *) ( /* dim=0 */ (__pyx_v_board.data + __pyx_t_4 * __pyx_v_board.strides[0]) ))) == __pyx_v_tile) != 0);
+    if (__pyx_t_6) {
+
+      /* "reversi_cython.pyx":72
+ *     for i in range(len(board)):
+ *         if board[i]==tile:
+ *             score += w_board[i]             # <<<<<<<<<<<<<<
+ *         elif board[i]==opp:
+ *             score -= w_board[i]
+ */
+      __pyx_t_7 = __pyx_v_i;
+      __pyx_t_5 = -1;
+      if (__pyx_t_7 < 0) {
+        __pyx_t_7 += __pyx_v_w_board.shape[0];
+        if (unlikely(__pyx_t_7 < 0)) __pyx_t_5 = 0;
+      } else if (unlikely(__pyx_t_7 >= __pyx_v_w_board.shape[0])) __pyx_t_5 = 0;
+      if (unlikely(__pyx_t_5 != -1)) {
+        __Pyx_RaiseBufferIndexError(__pyx_t_5);
+        __PYX_ERR(0, 72, __pyx_L1_error)
       }
-      #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-      if (likely(PyTuple_CheckExact(sequence))) {
-        __pyx_t_1 = PyTuple_GET_ITEM(sequence, 0); 
-        __pyx_t_6 = PyTuple_GET_ITEM(sequence, 1); 
-      } else {
-        __pyx_t_1 = PyList_GET_ITEM(sequence, 0); 
-        __pyx_t_6 = PyList_GET_ITEM(sequence, 1); 
-      }
-      __Pyx_INCREF(__pyx_t_1);
-      __Pyx_INCREF(__pyx_t_6);
-      #else
-      __pyx_t_1 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 64, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_1);
-      __pyx_t_6 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 64, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_6);
-      #endif
-      __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    } else {
-      Py_ssize_t index = -1;
-      __pyx_t_7 = PyObject_GetIter(__pyx_t_2); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 64, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_7);
-      __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-      __pyx_t_8 = Py_TYPE(__pyx_t_7)->tp_iternext;
-      index = 0; __pyx_t_1 = __pyx_t_8(__pyx_t_7); if (unlikely(!__pyx_t_1)) goto __pyx_L5_unpacking_failed;
-      __Pyx_GOTREF(__pyx_t_1);
-      index = 1; __pyx_t_6 = __pyx_t_8(__pyx_t_7); if (unlikely(!__pyx_t_6)) goto __pyx_L5_unpacking_failed;
-      __Pyx_GOTREF(__pyx_t_6);
-      if (__Pyx_IternextUnpackEndCheck(__pyx_t_8(__pyx_t_7), 2) < 0) __PYX_ERR(0, 64, __pyx_L1_error)
-      __pyx_t_8 = NULL;
-      __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-      goto __pyx_L6_unpacking_done;
-      __pyx_L5_unpacking_failed:;
-      __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-      __pyx_t_8 = NULL;
-      if (__Pyx_IterFinish() == 0) __Pyx_RaiseNeedMoreValuesError(index);
-      __PYX_ERR(0, 64, __pyx_L1_error)
-      __pyx_L6_unpacking_done:;
-    }
-    __Pyx_XDECREF_SET(__pyx_v_e, __pyx_t_1);
-    __pyx_t_1 = 0;
-    __Pyx_XDECREF_SET(__pyx_v_w, __pyx_t_6);
-    __pyx_t_6 = 0;
+      __pyx_v_score = (__pyx_v_score + (*((int *) ( /* dim=0 */ (__pyx_v_w_board.data + __pyx_t_7 * __pyx_v_w_board.strides[0]) ))));
 
-    /* "reversi_cython.pyx":65
- *     cdef int opp = tile^3
- *     for e, w in zip(board, w_board):
- *         if e==tile:             # <<<<<<<<<<<<<<
- *             score += w
- *         elif e==opp:
+      /* "reversi_cython.pyx":71
+ *     cdef int i
+ *     for i in range(len(board)):
+ *         if board[i]==tile:             # <<<<<<<<<<<<<<
+ *             score += w_board[i]
+ *         elif board[i]==opp:
  */
-    __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_tile); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 65, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_6 = PyObject_RichCompare(__pyx_v_e, __pyx_t_2, Py_EQ); __Pyx_XGOTREF(__pyx_t_6); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 65, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_6); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 65, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (__pyx_t_9) {
-
-      /* "reversi_cython.pyx":66
- *     for e, w in zip(board, w_board):
- *         if e==tile:
- *             score += w             # <<<<<<<<<<<<<<
- *         elif e==opp:
- *             score -= w
- */
-      __pyx_t_6 = __Pyx_PyInt_From_int(__pyx_v_score); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 66, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_6);
-      __pyx_t_2 = PyNumber_InPlaceAdd(__pyx_t_6, __pyx_v_w); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 66, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_2);
-      __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-      __pyx_t_10 = __Pyx_PyInt_As_int(__pyx_t_2); if (unlikely((__pyx_t_10 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 66, __pyx_L1_error)
-      __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-      __pyx_v_score = __pyx_t_10;
-
-      /* "reversi_cython.pyx":65
- *     cdef int opp = tile^3
- *     for e, w in zip(board, w_board):
- *         if e==tile:             # <<<<<<<<<<<<<<
- *             score += w
- *         elif e==opp:
- */
-      goto __pyx_L7;
+      goto __pyx_L5;
     }
 
-    /* "reversi_cython.pyx":67
- *         if e==tile:
- *             score += w
- *         elif e==opp:             # <<<<<<<<<<<<<<
- *             score -= w
+    /* "reversi_cython.pyx":73
+ *         if board[i]==tile:
+ *             score += w_board[i]
+ *         elif board[i]==opp:             # <<<<<<<<<<<<<<
+ *             score -= w_board[i]
  *     return score
  */
-    __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_opp); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 67, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_6 = PyObject_RichCompare(__pyx_v_e, __pyx_t_2, Py_EQ); __Pyx_XGOTREF(__pyx_t_6); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 67, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_6); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 67, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (__pyx_t_9) {
+    __pyx_t_8 = __pyx_v_i;
+    __pyx_t_5 = -1;
+    if (__pyx_t_8 < 0) {
+      __pyx_t_8 += __pyx_v_board.shape[0];
+      if (unlikely(__pyx_t_8 < 0)) __pyx_t_5 = 0;
+    } else if (unlikely(__pyx_t_8 >= __pyx_v_board.shape[0])) __pyx_t_5 = 0;
+    if (unlikely(__pyx_t_5 != -1)) {
+      __Pyx_RaiseBufferIndexError(__pyx_t_5);
+      __PYX_ERR(0, 73, __pyx_L1_error)
+    }
+    __pyx_t_6 = (((*((int *) ( /* dim=0 */ (__pyx_v_board.data + __pyx_t_8 * __pyx_v_board.strides[0]) ))) == __pyx_v_opp) != 0);
+    if (__pyx_t_6) {
 
-      /* "reversi_cython.pyx":68
- *             score += w
- *         elif e==opp:
- *             score -= w             # <<<<<<<<<<<<<<
+      /* "reversi_cython.pyx":74
+ *             score += w_board[i]
+ *         elif board[i]==opp:
+ *             score -= w_board[i]             # <<<<<<<<<<<<<<
  *     return score
  * 
  */
-      __pyx_t_6 = __Pyx_PyInt_From_int(__pyx_v_score); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 68, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_6);
-      __pyx_t_2 = PyNumber_InPlaceSubtract(__pyx_t_6, __pyx_v_w); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 68, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_2);
-      __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-      __pyx_t_10 = __Pyx_PyInt_As_int(__pyx_t_2); if (unlikely((__pyx_t_10 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 68, __pyx_L1_error)
-      __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-      __pyx_v_score = __pyx_t_10;
+      __pyx_t_9 = __pyx_v_i;
+      __pyx_t_5 = -1;
+      if (__pyx_t_9 < 0) {
+        __pyx_t_9 += __pyx_v_w_board.shape[0];
+        if (unlikely(__pyx_t_9 < 0)) __pyx_t_5 = 0;
+      } else if (unlikely(__pyx_t_9 >= __pyx_v_w_board.shape[0])) __pyx_t_5 = 0;
+      if (unlikely(__pyx_t_5 != -1)) {
+        __Pyx_RaiseBufferIndexError(__pyx_t_5);
+        __PYX_ERR(0, 74, __pyx_L1_error)
+      }
+      __pyx_v_score = (__pyx_v_score - (*((int *) ( /* dim=0 */ (__pyx_v_w_board.data + __pyx_t_9 * __pyx_v_w_board.strides[0]) ))));
 
-      /* "reversi_cython.pyx":67
- *         if e==tile:
- *             score += w
- *         elif e==opp:             # <<<<<<<<<<<<<<
- *             score -= w
+      /* "reversi_cython.pyx":73
+ *         if board[i]==tile:
+ *             score += w_board[i]
+ *         elif board[i]==opp:             # <<<<<<<<<<<<<<
+ *             score -= w_board[i]
  *     return score
  */
     }
-    __pyx_L7:;
-
-    /* "reversi_cython.pyx":64
- *     cdef int score = 0
- *     cdef int opp = tile^3
- *     for e, w in zip(board, w_board):             # <<<<<<<<<<<<<<
- *         if e==tile:
- *             score += w
- */
+    __pyx_L5:;
   }
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "reversi_cython.pyx":69
- *         elif e==opp:
- *             score -= w
+  /* "reversi_cython.pyx":75
+ *         elif board[i]==opp:
+ *             score -= w_board[i]
  *     return score             # <<<<<<<<<<<<<<
  * 
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_score); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 69, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __pyx_r = __pyx_t_3;
-  __pyx_t_3 = 0;
+  __pyx_t_10 = __Pyx_PyInt_From_int(__pyx_v_score); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 75, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_10);
+  __pyx_r = __pyx_t_10;
+  __pyx_t_10 = 0;
   goto __pyx_L0;
 
-  /* "reversi_cython.pyx":61
- *     return score
+  /* "reversi_cython.pyx":66
  * 
- * cpdef eval_func(int[:] board, int height, int width, int tile, int[:] w_board):             # <<<<<<<<<<<<<<
+ * 
+ * cpdef eval_func(int[:] board, int tile, int[:] w_board):             # <<<<<<<<<<<<<<
  *     cdef int score = 0
  *     cdef int opp = tile^3
  */
 
   /* function exit code */
   __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_XDECREF(__pyx_t_6);
-  __Pyx_XDECREF(__pyx_t_7);
+  __Pyx_XDECREF(__pyx_t_10);
   __Pyx_AddTraceback("reversi_cython.eval_func", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
   __pyx_L0:;
-  __Pyx_XDECREF(__pyx_v_e);
-  __Pyx_XDECREF(__pyx_v_w);
   __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
@@ -3897,24 +3753,18 @@ static PyObject *__pyx_f_14reversi_cython_eval_func(__Pyx_memviewslice __pyx_v_b
 static PyObject *__pyx_pw_14reversi_cython_5eval_func(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
 static PyObject *__pyx_pw_14reversi_cython_5eval_func(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   __Pyx_memviewslice __pyx_v_board = { 0, 0, { 0 }, { 0 }, { 0 } };
-  int __pyx_v_height;
-  int __pyx_v_width;
   int __pyx_v_tile;
   __Pyx_memviewslice __pyx_v_w_board = { 0, 0, { 0 }, { 0 }, { 0 } };
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("eval_func (wrapper)", 0);
   {
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_board,&__pyx_n_s_height,&__pyx_n_s_width,&__pyx_n_s_tile,&__pyx_n_s_w_board,0};
-    PyObject* values[5] = {0,0,0,0,0};
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_board,&__pyx_n_s_tile,&__pyx_n_s_w_board,0};
+    PyObject* values[3] = {0,0,0};
     if (unlikely(__pyx_kwds)) {
       Py_ssize_t kw_args;
       const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
       switch (pos_args) {
-        case  5: values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
-        CYTHON_FALLTHROUGH;
-        case  4: values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
-        CYTHON_FALLTHROUGH;
         case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
         CYTHON_FALLTHROUGH;
         case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
@@ -3931,71 +3781,55 @@ static PyObject *__pyx_pw_14reversi_cython_5eval_func(PyObject *__pyx_self, PyOb
         else goto __pyx_L5_argtuple_error;
         CYTHON_FALLTHROUGH;
         case  1:
-        if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_height)) != 0)) kw_args--;
+        if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_tile)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("eval_func", 1, 5, 5, 1); __PYX_ERR(0, 61, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("eval_func", 1, 3, 3, 1); __PYX_ERR(0, 66, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
-        if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_width)) != 0)) kw_args--;
+        if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_w_board)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("eval_func", 1, 5, 5, 2); __PYX_ERR(0, 61, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case  3:
-        if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_tile)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("eval_func", 1, 5, 5, 3); __PYX_ERR(0, 61, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case  4:
-        if (likely((values[4] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_w_board)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("eval_func", 1, 5, 5, 4); __PYX_ERR(0, 61, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("eval_func", 1, 3, 3, 2); __PYX_ERR(0, 66, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "eval_func") < 0)) __PYX_ERR(0, 61, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "eval_func") < 0)) __PYX_ERR(0, 66, __pyx_L3_error)
       }
-    } else if (PyTuple_GET_SIZE(__pyx_args) != 5) {
+    } else if (PyTuple_GET_SIZE(__pyx_args) != 3) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
       values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
       values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
-      values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
-      values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
     }
-    __pyx_v_board = __Pyx_PyObject_to_MemoryviewSlice_ds_int(values[0], PyBUF_WRITABLE); if (unlikely(!__pyx_v_board.memview)) __PYX_ERR(0, 61, __pyx_L3_error)
-    __pyx_v_height = __Pyx_PyInt_As_int(values[1]); if (unlikely((__pyx_v_height == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 61, __pyx_L3_error)
-    __pyx_v_width = __Pyx_PyInt_As_int(values[2]); if (unlikely((__pyx_v_width == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 61, __pyx_L3_error)
-    __pyx_v_tile = __Pyx_PyInt_As_int(values[3]); if (unlikely((__pyx_v_tile == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 61, __pyx_L3_error)
-    __pyx_v_w_board = __Pyx_PyObject_to_MemoryviewSlice_ds_int(values[4], PyBUF_WRITABLE); if (unlikely(!__pyx_v_w_board.memview)) __PYX_ERR(0, 61, __pyx_L3_error)
+    __pyx_v_board = __Pyx_PyObject_to_MemoryviewSlice_ds_int(values[0], PyBUF_WRITABLE); if (unlikely(!__pyx_v_board.memview)) __PYX_ERR(0, 66, __pyx_L3_error)
+    __pyx_v_tile = __Pyx_PyInt_As_int(values[1]); if (unlikely((__pyx_v_tile == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 66, __pyx_L3_error)
+    __pyx_v_w_board = __Pyx_PyObject_to_MemoryviewSlice_ds_int(values[2], PyBUF_WRITABLE); if (unlikely(!__pyx_v_w_board.memview)) __PYX_ERR(0, 66, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("eval_func", 1, 5, 5, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 61, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("eval_func", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 66, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("reversi_cython.eval_func", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_14reversi_cython_4eval_func(__pyx_self, __pyx_v_board, __pyx_v_height, __pyx_v_width, __pyx_v_tile, __pyx_v_w_board);
+  __pyx_r = __pyx_pf_14reversi_cython_4eval_func(__pyx_self, __pyx_v_board, __pyx_v_tile, __pyx_v_w_board);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_14reversi_cython_4eval_func(CYTHON_UNUSED PyObject *__pyx_self, __Pyx_memviewslice __pyx_v_board, int __pyx_v_height, int __pyx_v_width, int __pyx_v_tile, __Pyx_memviewslice __pyx_v_w_board) {
+static PyObject *__pyx_pf_14reversi_cython_4eval_func(CYTHON_UNUSED PyObject *__pyx_self, __Pyx_memviewslice __pyx_v_board, int __pyx_v_tile, __Pyx_memviewslice __pyx_v_w_board) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("eval_func", 0);
   __Pyx_XDECREF(__pyx_r);
-  if (unlikely(!__pyx_v_board.memview)) { __Pyx_RaiseUnboundLocalError("board"); __PYX_ERR(0, 61, __pyx_L1_error) }
-  if (unlikely(!__pyx_v_w_board.memview)) { __Pyx_RaiseUnboundLocalError("w_board"); __PYX_ERR(0, 61, __pyx_L1_error) }
-  __pyx_t_1 = __pyx_f_14reversi_cython_eval_func(__pyx_v_board, __pyx_v_height, __pyx_v_width, __pyx_v_tile, __pyx_v_w_board, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 61, __pyx_L1_error)
+  if (unlikely(!__pyx_v_board.memview)) { __Pyx_RaiseUnboundLocalError("board"); __PYX_ERR(0, 66, __pyx_L1_error) }
+  if (unlikely(!__pyx_v_w_board.memview)) { __Pyx_RaiseUnboundLocalError("w_board"); __PYX_ERR(0, 66, __pyx_L1_error) }
+  __pyx_t_1 = __pyx_f_14reversi_cython_eval_func(__pyx_v_board, __pyx_v_tile, __pyx_v_w_board, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 66, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -18243,12 +18077,10 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_update, __pyx_k_update, sizeof(__pyx_k_update), 0, 0, 1, 1},
   {&__pyx_n_s_w_board, __pyx_k_w_board, sizeof(__pyx_k_w_board), 0, 0, 1, 1},
   {&__pyx_n_s_width, __pyx_k_width, sizeof(__pyx_k_width), 0, 0, 1, 1},
-  {&__pyx_n_s_zip, __pyx_k_zip, sizeof(__pyx_k_zip), 0, 0, 1, 1},
   {0, 0, 0, 0, 0, 0, 0}
 };
 static CYTHON_SMALL_CODE int __Pyx_InitCachedBuiltins(void) {
-  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 23, __pyx_L1_error)
-  __pyx_builtin_zip = __Pyx_GetBuiltinName(__pyx_n_s_zip); if (!__pyx_builtin_zip) __PYX_ERR(0, 64, __pyx_L1_error)
+  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 25, __pyx_L1_error)
   __pyx_builtin_MemoryError = __Pyx_GetBuiltinName(__pyx_n_s_MemoryError); if (!__pyx_builtin_MemoryError) __PYX_ERR(1, 109, __pyx_L1_error)
   __pyx_builtin_ValueError = __Pyx_GetBuiltinName(__pyx_n_s_ValueError); if (!__pyx_builtin_ValueError) __PYX_ERR(2, 133, __pyx_L1_error)
   __pyx_builtin_enumerate = __Pyx_GetBuiltinName(__pyx_n_s_enumerate); if (!__pyx_builtin_enumerate) __PYX_ERR(2, 151, __pyx_L1_error)
@@ -18265,14 +18097,14 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_InitCachedConstants", 0);
 
-  /* "reversi_cython.pyx":19
+  /* "reversi_cython.pyx":21
  *     cdef dict move_dict = {}
  *     cdef int r,c, dr, dc, di
  *     cdef list dirs = [(r,c, r*width+c)for r in [-1,0,1] for c in [-1,0,1] if r or c] #             # <<<<<<<<<<<<<<
  *     cdef int idx = -1
  *     cdef int inter_r, inter_c, inter_idx, flip
  */
-  __pyx_tuple_ = PyTuple_Pack(3, __pyx_int_neg_1, __pyx_int_0, __pyx_int_1); if (unlikely(!__pyx_tuple_)) __PYX_ERR(0, 19, __pyx_L1_error)
+  __pyx_tuple_ = PyTuple_Pack(3, __pyx_int_neg_1, __pyx_int_0, __pyx_int_1); if (unlikely(!__pyx_tuple_)) __PYX_ERR(0, 21, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple_);
   __Pyx_GIVEREF(__pyx_tuple_);
 
@@ -18900,7 +18732,7 @@ if (!__Pyx_RefNanny) {
  * from cpython cimport array
  * import array             # <<<<<<<<<<<<<<
  * 
- * cdef bint isOnBoard(int r, int c, int H, int W):
+ * 
  */
   __pyx_t_1 = __Pyx_Import(__pyx_n_s_array, 0, -1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 2, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);

@@ -1,7 +1,8 @@
 import sys
 sys.path.append('../..') # 添加相對路徑上兩層到sys.path，讓程式找到的模組_package
 from _package._game_theory.alpha_beta_algo import MinimaxABAgent
-from Game_AI_agent.reversi_alpha_beta import AB_ReversiState
+#from Game_AI_agent.reversi_alpha_beta import AB_ReversiState
+from Basic_Game_Logic.fast_ab_reversi import AB_ReversiState
     
 
 class Reversi_Game():
@@ -28,10 +29,11 @@ class Reversi_Game():
         self.state.makeMove(('PASS', 0))
             
     def set_board(self, x, y):
-        self.state.board[x][y] = (self.state.board[x][y]+1)%3
+        idx = x*self.width+y
+        self.state.board[idx] = (self.state.board[idx]+1)%3
             
     def get_board(self):
-        return self.state.board
+        return self.state.to_board()
     
     def get_turn(self):
         return self.state.playerColor
@@ -47,7 +49,7 @@ class Reversi_Game():
         scores = {1:0, 2:0}
         for x in range(self.height):
             for y in range(self.width):
-                tile = self.state.board[x][y]
+                tile = self.get_board()[x][y]
                 if tile in scores:
                     scores[tile] += 1
         return scores[1], scores[2]
@@ -56,7 +58,7 @@ class Reversi_Game():
         empty_grid = 0
         for x in range(self.height):
             for y in range(self.width):
-                if self.state.board[x][y]==0:
+                if self.get_board()[x][y]==0:
                     empty_grid += 1
         return empty_grid
     

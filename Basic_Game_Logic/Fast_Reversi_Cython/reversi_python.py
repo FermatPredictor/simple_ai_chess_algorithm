@@ -51,7 +51,7 @@ def count_tile(board, tile):
             score -= 1
     return score
 
-def eval_func(board, height, width, tile, w_board):
+def eval_func(board, tile, w_board):
     score, opp = 0, tile^3
     for e, w in zip(board, w_board):
         if e==tile:

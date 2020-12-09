@@ -7,8 +7,8 @@ import cProfile
 
 if __name__=='__main__':
     from Fast_Reversi_Cython.reversi_cython import getValidMoves as moves
-    from Fast_Reversi_Cython.reversi_python import eval_func as ef
-    from Fast_Reversi_Cython.reversi_python import count_tile
+    from Fast_Reversi_Cython.reversi_cython import eval_func as ef
+    from Fast_Reversi_Cython.reversi_cython import count_tile
 else:
     from .Fast_Reversi_Cython.reversi_cython import getValidMoves as moves
     from .Fast_Reversi_Cython.reversi_cython import eval_func as ef
@@ -16,6 +16,31 @@ else:
 
 class AB_ReversiState():
     """ 
+    優化歷程概要:
+    目前這個版本跟一開始的版本相比，
+    大約從每秒搜索1萬個節點提速至20萬個節點，可謂竭盡所能之究極加速
+    <遊戲邏輯>
+    1. 搜索合法步: 原搜索所有空格，改為由自己棋子出發搜索更佳
+    2. 判斷終局: 原判斷黑白雙方都無合法棋步，現記錄上一手誰pass，改判雙方都pass後結束
+    <棋盤結構選擇>
+    目前用array模組的array，用於陣列元素都是同一種類別，為一維結構，比二維快，也比list快
+    為何不用numpy?
+    numpy的特長是數學計算快，但是單純的陣列存取元素反而更慢。
+    class內計算採用array，然而對外接口為方便實作(比如說ui畫圖)，
+    對外接口的input, output仍用二維list
+    <Cython>
+    類python語言，透過事前指定每個變數的型別，提速十分明顯
+    
+    【測速須知】
+    目前用cProfile分析各函數調用的時間，
+    注意「觀測」本身會讓程式變慢，
+    故作用是找出程式相對慢的部分再抓出來加速。
+    
+    【加速還有哪些突破口?】
+    平行化: 榨乾CPU資源
+    ab算法: 若棋步有好的排序，剪枝效果會更明顯
+    
+    【class 函數簡介】    
     - playerColor:  int(usually 1 or 2, 0 for empty grid), 下一步換誰下
     - getValidMoves(self): 下一步有哪些合法棋步可走，回傳字典:{合法棋步座標: 翻轉的對手棋子}，
                            通常是各ai算法的核心，很值得優化速度
@@ -44,7 +69,8 @@ class AB_ReversiState():
             self.pass_info = 0
         else:
             self.pass_info |= self.playerColor
-        self.__next_turn()
+        self.playerColor ^=3
+        #self.__next_turn()
             
     def unMakeMove(self, action_key):
         key, pass_info = action_key
@@ -53,16 +79,17 @@ class AB_ReversiState():
             self.board[key[0]] = 0
             for idx in key[1:]:
                 self.board[idx] = self.playerColor
-        self.__next_turn()
+        self.playerColor ^=3
+        #self.__next_turn()
     
     def getValidMoves(self):
         return moves(self.board, self.height, self.width, self.playerColor, self.pass_info)
                 
-    def __opp_color(self):
-        return 3^self.playerColor
+#    def __opp_color(self):
+#        return 3^self.playerColor
     
-    def __next_turn(self):
-        self.playerColor = self.__opp_color()
+#    def __next_turn(self):
+#        self.playerColor = 3^self.playerColor
         
     def winner(self):
         score = {0:0, 1:0, 2:0}
@@ -77,6 +104,11 @@ class AB_ReversiState():
     
     def is_terminal(self):
         return self.pass_info == 3
+    
+    def to_board(self):
+        L = self.board
+        step = self.width
+        return [list(L[r:r+step]) for r in range(0,len(L),step)]
     
     def __spiral_coords(self, board, r1, c1, r2, c2, weights):
         """
@@ -114,8 +146,7 @@ class AB_ReversiState():
         return w_board
         
     def evaluation_function(self, tile):
-        return ef(self.board, self.height, self.width, tile, self.w_board) if self.eval_mode == 'weight' \
-               else count_tile(self.board, self.height, self.width, tile)
+        return ef(self.board, tile, self.w_board) if self.eval_mode == 'weight' else count_tile(self.board, tile)
     
 def test_getValidMoves():
     """ 測試找合法棋步 """
@@ -132,7 +163,6 @@ def test_getValidMoves():
     print(state.getValidMoves())
     
 def test_eval_func():
-    """ 測試找合法棋步 """
     play_color = 1
     board = [[0,0,0,0,0,0,0,0],
               [0,0,0,0,0,0,0,0],
@@ -188,6 +218,7 @@ def main():
 if __name__=='__main__':
     #test_getValidMoves()
     #test_eval_func()
-    cProfile.run('main()')
+    #cProfile.run('main()')
+    main()
     
     

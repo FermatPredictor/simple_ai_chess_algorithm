@@ -98,10 +98,11 @@ def main():
 
     state = AB_ReversiState(board, play_color)
     #print(state.getValidMoves())
-    AI = MinimaxABAgent(8, play_color, state)
+    AI = MinimaxABAgent(7, play_color, state)
     result = AI.choose_action()
     
 if __name__=='__main__':
-    cProfile.run('main()')
+    main()
+    #cProfile.run('main()')
     
     

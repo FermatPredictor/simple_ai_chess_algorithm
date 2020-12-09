@@ -1,8 +1,10 @@
 from cpython cimport array
 import array
 
+
 cdef bint isOnBoard(int r, int c, int H, int W):
     return 0 <= r < H and 0 <= c < W
+
 
 cpdef getValidMoves(int[:] board, int height, int width, int playerColor, int pass_info):
     """
@@ -48,23 +50,27 @@ cpdef getValidMoves(int[:] board, int height, int width, int playerColor, int pa
     move_dict = {k: (v,pass_info) for k,v in move_dict.items()}
     return move_dict if move_dict else {'PASS': ('PASS', pass_info)}
 
+
 cpdef count_tile(int[:] board, int tile):
     cdef int score = 0
     cdef int opp = tile^3
-    for e in board:
-        if e==tile:
+    cdef int i
+    for i in range(len(board)):
+        if board[i]==tile:
             score += 1
-        elif e==opp:
+        elif board[i]==opp:
             score -= 1
     return score
 
-cpdef eval_func(int[:] board, int height, int width, int tile, int[:] w_board):
+
+cpdef eval_func(int[:] board, int tile, int[:] w_board):
     cdef int score = 0
     cdef int opp = tile^3
-    for e, w in zip(board, w_board):
-        if e==tile:
-            score += w
-        elif e==opp:
-            score -= w
+    cdef int i
+    for i in range(len(board)):
+        if board[i]==tile:
+            score += w_board[i]
+        elif board[i]==opp:
+            score -= w_board[i]
     return score
 
