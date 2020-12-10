@@ -53,7 +53,7 @@ class MinimaxABAgent:
         self.node_expanded += 1
  
         if current_depth == self.max_depth or self.state.is_terminal():
-            return self.state.evaluation_function(self.player_color), ""
+            return self.state.evaluation_function(self.player_color), "PASS"
  
         possible_action = self.state.getValidMoves()
         key_of_actions = list(possible_action.keys())

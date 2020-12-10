@@ -70,3 +70,5 @@ class Reversi_Game():
             print('end mode analysize...')
         AI = MinimaxABAgent(depth, self.get_turn(), self.state)
         AI.choose_action()
+
+

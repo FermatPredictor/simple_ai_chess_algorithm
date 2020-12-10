@@ -3,6 +3,7 @@ import pygame
 import spriteclass as sc
 import reversifunc as rf
 import globalvar as gv
+import time
 
 pygame.init()
 
@@ -88,7 +89,8 @@ def InGame():
         if MODE == 'play':
             if not game.is_terminal():
                 game.check_move() # 輪空規則
-                if is_ai_turn():
+                if is_ai_turn() and game.get_hint():
+                    # 防呆: 裡層檢查是否有合法棋步才call ai
                     game.ai_action()
             else:
                 if blackScore > whiteScore:
