@@ -14,13 +14,14 @@ class Reversi_Game():
         board[H-1][W-1], board[H-1][W] = 2, 1
         board[H][W-1], board[H][W] = 1, 2
         self.state = AB_ReversiState(board, 1)
-        self.recoder = Recorder(board)
+        self.recorder = Recorder(board)
         
     def make_move(self, r,c):
         valid_moves = self.state.getValidMoves()
         if (r,c) in valid_moves:
-            self.recoder.record_move(r,c)
             self.state.makeMove(valid_moves[(r,c)])
+            self.recorder.record_move(r,c)
+            self.recorder.save()
     
     def check_move(self):
         # 輪空規則

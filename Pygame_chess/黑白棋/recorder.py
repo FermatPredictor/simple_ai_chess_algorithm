@@ -1,7 +1,10 @@
+import json
+
 class Recorder():
     
-    def __init__(self, board):
-        self.board = self.reset(board)
+    def __init__(self, board=None):
+        if board:
+            self.reset(board)
         self.step_stack = []
     
     def record_move(self, r,c):
@@ -10,15 +13,21 @@ class Recorder():
         
     def reset(self, board):
         H, W = len(board), len(board[0])
-        self.board = [[0]*H for i in range(H)]
+        self.board = [[0]*W for i in range(H)]
         for r in range(H):
             for c in range(W):
-                self.board = board[r][c]
+                self.board[r][c] = board[r][c]
         self.step_stack = []
         
     def save(self):
-        pass
+        json.dump((self.board, self.step_stack), open(r".\record.json", "w"))
+        
     
     def load(self):
-        pass
+        return json.load(open(r".\record.json", "r"))
+
+if __name__ == '__main__':
+    r = Recorder()
+    step_stack = r.load()
+    print(step_stack)
         
