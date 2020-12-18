@@ -1,7 +1,7 @@
 import sys
 sys.path.append('../..') # 添加相對路徑上兩層到sys.path，讓程式找到的模組_package
-from _package._game_theory.alpha_beta_algo import MinimaxABAgent
-from Basic_Game_Logic.reversi_fast_ab import AB_ReversiState
+from Basic_Game_Logic.reversi_fast_ab import AB_ReversiState, ab_action
+from Basic_Game_Logic.reversi_mcts import mcts_action
     
 from recorder import Recorder
 
@@ -66,12 +66,7 @@ class Reversi_Game():
         return empty_grid
     
     def ai_action(self):
-        end_mode = self.__count_empty_grid()<=14
-        self.state.eval_mode = 'weight' if not end_mode else 'num'
-        depth = 6 if not end_mode else 10
-        if end_mode:
-            print('end mode analysize...')
-        AI = MinimaxABAgent(depth, self.get_turn(), self.state)
-        AI.choose_action()
+        best_move = mcts_action(self.get_board(), self.get_turn())
+        self.make_move(*best_move)
 
 

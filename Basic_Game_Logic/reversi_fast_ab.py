@@ -164,13 +164,32 @@ def test_eval_func():
               [0,0,0,0,0,0,0,0]]
     state = AB_ReversiState(board, play_color)
     print(state.evaluation_function(play_color))
+    
+def __count_empty_grid(board):
+    empty_grid = 0
+    H, W = len(board), len(board[0])
+    for x in range(H):
+        for y in range(W):
+            if board[x][y]==0:
+                empty_grid += 1
+    return empty_grid
 
+def ab_action(board, playerColor):
+    end_mode = __count_empty_grid(board)<=14
+    state = AB_ReversiState(board, playerColor)
+    #print(state.getValidMoves())
+    state.eval_mode = 'weight' if not end_mode else 'num'
+    depth = 6 if not end_mode else 10
+    if end_mode:
+        print('end mode analysize...')
+    AI = MinimaxABAgent(depth, state.playerColor, state)
+    return AI.choose_action()
+    
 def main():
     """
     黑白棋套用alpha-beta算法
-    平均每秒可搜索10000個節點以上
     """
-    play_color = 1
+    playerColor = 1
     board = [[0,0,0,0,0,0,0,0],
               [0,0,0,0,0,0,0,0],
               [0,0,0,1,0,0,0,0],
@@ -199,11 +218,9 @@ def main():
     #          [2, 2, 1, 2, 2, 1, 2, 2],
     #          [2, 2, 1, 1, 2, 2, 1, 0],
     #          [0, 2, 2, 2, 2, 2, 0, 0]]
+    
+    ab_action(board, playerColor)
 
-    state = AB_ReversiState(board, play_color)
-    #print(state.getValidMoves())
-    AI = MinimaxABAgent(8, play_color, state)
-    result = AI.choose_action()
     
 if __name__=='__main__':
     #test_getValidMoves()

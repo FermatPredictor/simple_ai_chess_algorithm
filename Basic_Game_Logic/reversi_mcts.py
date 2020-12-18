@@ -62,10 +62,15 @@ class MCTS_ReversiState():
         step = self.width
         return [list(L[r:r+step]) for r in range(0,len(L),step)]
 
+def mcts_action(board, playerColor):
+    state = MCTS_ReversiState(board, playerColor)
+    AI = MonteCarloTreeSearch(MonteCarloTreeSearchNode(state))
+    result = AI.best_action(1000)
+    return result.action[0]
 
 
 def main():
-    play_color = 1
+    playerColor = 1
 #    board = [[0,2,1,2,0,0,0,0],
 #               [0,0,0,0,0,0,0,0],
 #               [0,0,0,0,0,0,0,0],
@@ -91,11 +96,9 @@ def main():
 #             [1,1,2,2,2,2,2,2],
 #             [1,1,1,1,1,2,0,2],
 #             [2,2,2,2,2,2,0,0]]
+    mcts_action(board, playerColor)
 
-    state = MCTS_ReversiState(board, play_color)
-    AI = MonteCarloTreeSearch(MonteCarloTreeSearchNode(state))
-    result = AI.best_action(1000)
-    print(result.action)
+    
     
 if __name__=='__main__':
     #cProfile.run('main()')
