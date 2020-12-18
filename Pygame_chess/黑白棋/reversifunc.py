@@ -1,8 +1,7 @@
 import sys
 sys.path.append('../..') # 添加相對路徑上兩層到sys.path，讓程式找到的模組_package
 from _package._game_theory.alpha_beta_algo import MinimaxABAgent
-#from Game_AI_agent.reversi_alpha_beta import AB_ReversiState
-from Basic_Game_Logic.fast_ab_reversi import AB_ReversiState
+from Basic_Game_Logic.reversi_fast_ab import AB_ReversiState
     
 from recorder import Recorder
 
