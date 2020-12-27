@@ -1,72 +1,31 @@
 import sys
 sys.path.append('../..') # 添加相對路徑上兩層到sys.path，讓程式找到的模組_package
-from Basic_Game_Logic.reversi_fast_ab import AB_ReversiState, ab_action
-from Basic_Game_Logic.reversi_mcts import mcts_action
-    
-from recorder import Recorder
+from Basic_Game_Logic.reversi_fast_ab import AB_ReversiState
+from _package.game_engine.general_game_engine import Game_Engine
+from Basic_Game_Logic.reversi_fast_ab import ab_action
 
-class Reversi_Game():
-    def __init__(self, height, width):
-        self.height, self.width = height, width
-        board = [[0]*width for _ in range(height)]
-        H, W = height//2, width//2
-        board[H-1][W-1], board[H-1][W] = 2, 1
-        board[H][W-1], board[H][W] = 1, 2
-        self.state = AB_ReversiState(board, 1)
-        self.recorder = Recorder(board)
+class Reversi_Game(Game_Engine):
+    
+    def __init__(self, state, black_ai, white_ai):
+        super().__init__(state, black_ai, white_ai)
         
-    def make_move(self, r,c):
-        valid_moves = self.state.getValidMoves()
-        if (r,c) in valid_moves:
-            self.state.makeMove(valid_moves[(r,c)])
-            self.recorder.record_move(r,c)
-            self.recorder.save()
-    
-    def check_move(self):
-        # 輪空規則
-        valid_moves = self.get_hint()
-        if not valid_moves:
-            self.change_turn()
-            
-    def change_turn(self):
-        self.state.makeMove(('PASS', 0))
-            
     def set_board(self, x, y):
-        idx = x*self.width+y
+        idx = x*self.state.width+y
         self.state.board[idx] = (self.state.board[idx]+1)%3
-            
-    def get_board(self):
-        return self.state.to_board()
-    
-    def get_turn(self):
-        return self.state.playerColor
-    
-    def get_hint(self):
-        return set(self.state.getValidMoves()) - {'PASS'}
-    
-    def is_terminal(self):
-        return self.state.is_terminal()
-    
+        
     # 計算當前比分
     def getScoreOfBoard(self)-> dict:
         scores = {1:0, 2:0}
-        for x in range(self.height):
-            for y in range(self.width):
-                tile = self.get_board()[x][y]
-                if tile in scores:
-                    scores[tile] += 1
+        for tile in self.state.board:
+            if tile in scores:
+                scores[tile] += 1
         return scores[1], scores[2]
     
-    def __count_empty_grid(self):
-        empty_grid = 0
-        for x in range(self.height):
-            for y in range(self.width):
-                if self.get_board()[x][y]==0:
-                    empty_grid += 1
-        return empty_grid
-    
-    def ai_action(self):
-        best_move = mcts_action(self.get_board(), self.get_turn())
-        self.make_move(*best_move)
 
-
+def reversi_init_game(height, width, black_ai=ab_action, white_ai=ab_action):
+    board = [[0]*width for _ in range(height)]
+    H, W = height//2, width//2
+    board[H-1][W-1], board[H-1][W] = 2, 1
+    board[H][W-1], board[H][W] = 1, 2
+    state = AB_ReversiState(board, 1)
+    return Reversi_Game(state, black_ai, white_ai)

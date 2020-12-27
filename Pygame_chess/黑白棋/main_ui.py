@@ -3,7 +3,6 @@ import pygame
 import spriteclass as sc
 import reversifunc as rf
 import globalvar as gv
-import time
 
 pygame.init()
 
@@ -51,7 +50,7 @@ row_column and x_y，
 ui_board統一用x,y座標
 """
 def InGame():
-    game = rf.Reversi_Game(8, 8)
+    game = rf.reversi_init_game(8,8)#Reversi_Game(8, 8)
 
     texts = pygame.sprite.Group()
     buttons = pygame.sprite.Group()

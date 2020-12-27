@@ -46,6 +46,7 @@ class AB_ReversiState():
                            通常是各ai算法的核心，很值得優化速度
     - makeMove(self, action_key): 根據action_key走棋 
     - unMakeMove(self, action_key): 根據同一個action_key還原棋步，通常用於alpha_beta算法避免創建過多state
+    - passMove(self): 沒棋步可走，PASS
     - is_terminal(self): 判斷遊戲是否結束了
     - winner(self, tile): 遊戲結束的狀況下，判斷贏家是誰(0 for 和棋)
     - next_turn(self): 若遇到輪空的狀況，換下一個玩家行動
@@ -79,6 +80,9 @@ class AB_ReversiState():
             for idx in key[1:]:
                 self.board[idx] = self.playerColor
         self.playerColor ^=3
+        
+    def passMove(self):
+        self.makeMove(('PASS', 0))
     
     def getValidMoves(self):
         return moves(self.board, self.height, self.width, self.playerColor, self.pass_info)
