@@ -25,7 +25,7 @@ def reversi_init_game(height, width, black_ai=None, white_ai=None):
 def simulate_game(game_num):
     win_cnt = {0:0, 1:0, -1:0}
     for i in range(game_num):
-        game = reversi_init_game(8,8, ab_action, parallel_mcts_action)
+        game = reversi_init_game(8,8, mcts_action, parallel_mcts_action)
         while not game.is_terminal():
             game.check_move() # 輪空規則
             if game.get_hint():
@@ -39,14 +39,14 @@ def simulate_game(game_num):
         
 def load_game_test():
     game = reversi_init_game(8,8)
-    game.load(r'2020-12-27_21-15-30.json')
+    game.load(r'2020-12-27_22-13-45.json')
     for i in range(64):
         game.next_move()
         print(i)
         pprint(game.get_board())
                 
 if __name__ == '__main__':
-    simulate_game(1)
+    simulate_game(10)
     #load_game_test()
 
     
