@@ -4,6 +4,8 @@ from copy import deepcopy
 import time
 import random
 
+from multiprocessing import Pool, cpu_count
+
 class MonteCarloTreeSearchNode(object):
     """
     MonteCarloTreeSearch 演算法模版，
@@ -53,16 +55,10 @@ class MonteCarloTreeSearchNode(object):
     def rollout(self):
         player_color = self.state.playerColor
         cur_state = deepcopy(self.state)
-        #print('rollout前')
-        #print(player_color)
-        #pprint(cur_state.board)
         while not cur_state.is_terminal():
             possible_moves = list(cur_state.getValidMoves().values())
             action = self.rollout_policy(possible_moves)
             cur_state.makeMove(action)
-        #print('rollout後')
-        #print(player_color)
-        #pprint(cur_state.board)
         return -cur_state.winner(player_color)
 
     def backpropagate(self, result):
@@ -88,7 +84,7 @@ class MonteCarloTreeSearch:
     def __init__(self, node: MonteCarloTreeSearchNode):
         self.root = node
 
-    def best_action(self, simulations_number):
+    def best_action(self, simulations_number, rtn_win_rate=False):
         start_time = time.time()
         for _ in range(simulations_number):
             v = self.tree_policy()
@@ -97,8 +93,12 @@ class MonteCarloTreeSearch:
         eval_time = max(0.00001, time.time() - start_time)
         print(f"--- {eval_time} seconds ---, avg: {simulations_number/eval_time} (explode_node per seconds)")
         # exploitation only
+        win_rate = 1-self.root.q/self.root.n
+        print(f'win rate of this board: {win_rate}')
         for c in self.root.children:
             print(c.action, c.q, c.n, c.q/c.n)
+        if rtn_win_rate:
+            return win_rate
         return self.root.best_child(c_param=0.)
 
     def tree_policy(self):
@@ -109,4 +109,41 @@ class MonteCarloTreeSearch:
             else:
                 current_node = current_node.best_child()
         return current_node
+  
+def one_MCTS(node, simulations_number):
+    AI = MonteCarloTreeSearch(node)
+    win_rate = AI.best_action(simulations_number, rtn_win_rate=True)
+    return win_rate
+    
+class parallel_MCTS:
+    """
+    MCTS的平行化版本，均等對每個子盤面做MCTS，
+    找勝率最高的棋步
+    """
+    def __init__(self, node: MonteCarloTreeSearchNode):
+        self.root = node
+        
+
+    def best_action(self, simulations_number):
+        
+        start_time = time.time()
+        chlid_node = []
+        while not self.root.is_fully_expanded():
+            chlid_node.append((self.root.expand(), simulations_number))
+        
+        
+        cpu = cpu_count()//2 #注意若使用過多cpu反而會減速
+        print(f'We use {cpu} cpus.')
+        with Pool(cpu) as p:
+            res = p.starmap(one_MCTS, chlid_node)
+            
+        # 選擇對手勝率最低的點
+        win_rate = 1-min(res)
+        best_node = chlid_node[np.argmin(res)][0]
+        eval_time = max(0.00001, time.time() - start_time)
+        print(f"--- {eval_time} seconds ---, avg: {simulations_number*len(chlid_node)/eval_time} (explode_node per seconds)")
+        print(f'the best_move is {best_node.action[0]}')
+        print(f'win rate of this board: {win_rate}')
+        return best_node
+
 

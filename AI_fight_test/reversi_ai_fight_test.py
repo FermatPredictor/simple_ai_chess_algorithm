@@ -6,7 +6,7 @@ from pprint import pprint
 from datetime import datetime
 
 from Basic_Game_Logic.reversi_fast_ab import ab_action
-from Basic_Game_Logic.reversi_mcts import mcts_action
+from Basic_Game_Logic.reversi_mcts import mcts_action, parallel_mcts_action
 from Basic_Game_Logic.reversi_fast_ab import AB_ReversiState
 from _package.game_engine.general_game_engine import Game_Engine
 
@@ -25,7 +25,7 @@ def reversi_init_game(height, width, black_ai=None, white_ai=None):
 def simulate_game(game_num):
     win_cnt = {0:0, 1:0, -1:0}
     for i in range(game_num):
-        game = reversi_init_game(6,6, ab_action, mcts_action)
+        game = reversi_init_game(8,8, ab_action, parallel_mcts_action)
         while not game.is_terminal():
             game.check_move() # 輪空規則
             if game.get_hint():
@@ -38,15 +38,15 @@ def simulate_game(game_num):
         game.save(os.path.join('.\\',time_now()+'.json'))
         
 def load_game_test():
-    game = reversi_init_game(6,6)
-    game.load(r'.\2020-12-27_13-12-19.json')
-    for i in range(36):
+    game = reversi_init_game(8,8)
+    game.load(r'2020-12-27_21-15-30.json')
+    for i in range(64):
         game.next_move()
         print(i)
         pprint(game.get_board())
                 
 if __name__ == '__main__':
-    simulate_game(2)
+    simulate_game(1)
     #load_game_test()
 
     

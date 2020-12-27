@@ -1,6 +1,6 @@
 import sys
 sys.path.append('..') # 添加相對路徑上兩層到sys.path，讓程式找到的模組_package
-from _package._game_theory.mcts_algo import MonteCarloTreeSearch, MonteCarloTreeSearchNode
+from _package._game_theory.mcts_algo import MonteCarloTreeSearch, MonteCarloTreeSearchNode, parallel_MCTS
 
 from array import array
 import cProfile
@@ -9,8 +9,8 @@ if __name__=='__main__':
     from Fast_Reversi_Cython.reversi_cython import getValidMoves as moves
     from Fast_Reversi_Cython.reversi_cython import count_tile
 else:
-    from .Fast_Reversi_Cython.reversi_cython import getValidMoves as moves
-    from .Fast_Reversi_Cython.reversi_cython import count_tile
+    from Fast_Reversi_Cython.reversi_cython import getValidMoves as moves
+    from Fast_Reversi_Cython.reversi_cython import count_tile
 
 class MCTS_ReversiState():
 
@@ -69,6 +69,13 @@ def mcts_action(board, playerColor):
     return result.action[0]
 
 
+def parallel_mcts_action(board, playerColor):
+    state = MCTS_ReversiState(board, playerColor)
+    AI = parallel_MCTS(MonteCarloTreeSearchNode(state))
+    result = AI.best_action(1000)
+    return result.action[0]
+
+
 def main():
     playerColor = 1
 #    board = [[0,2,1,2,0,0,0,0],
@@ -96,7 +103,8 @@ def main():
 #             [1,1,2,2,2,2,2,2],
 #             [1,1,1,1,1,2,0,2],
 #             [2,2,2,2,2,2,0,0]]
-    mcts_action(board, playerColor)
+    #mcts_action(board, playerColor)
+    parallel_mcts_action(board, playerColor)
 
     
     
