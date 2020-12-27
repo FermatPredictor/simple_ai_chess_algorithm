@@ -29,27 +29,34 @@ class Game_Engine():
     """
     def __init__(self, state, black_ai=None, white_ai=None):
         self.state = state
-        self.recorder = Recorder(self.state, 1, self.get_board())
+        self.recorder = Recorder(self.state)
         self.b_engine = black_ai if black_ai else None
         self.w_engine = white_ai if white_ai else None
         
-    def make_move(self, r,c):
+    def make_move(self, r,c, raise_except=False):
         valid_moves = self.state.getValidMoves()
         if (r,c) in valid_moves:
             self.state.makeMove(valid_moves[(r,c)])
+            self.recorder.refresh()
             self.recorder.record_move((r,c))
-        else:
+        elif raise_except:
             raise Exception('The move is not valid.')
             
     def change_turn(self):
+        """
+        觸發條件: 一方無棋可走，自動換下一方走。
+        或者手動按PASS鈕觸發
+        """
         self.state.passMove()
+        self.recorder.record_move('PASS')
 
     def check_move(self):
-        # 輪空規則
+        """
+        輪空規則，觸發時機在主遊戲迴圈被call。
+        """   
         valid_moves = self.get_hint()
         if not valid_moves:
             self.change_turn()
-            self.recorder.record_move('PASS')
     
     def get_hint(self):
         return set(self.state.getValidMoves()) - {'PASS'}
@@ -65,15 +72,20 @@ class Game_Engine():
     
     def save(self, path):
         self.recorder.save(path)
+        print(f'save the file {path}')
         
     def load(self, path):
         self.recorder.load(path)
+        print(f'load the file {path}')
         
     def back_move(self):
         self.state = self.recorder.back_move()
     
     def next_move(self):
         self.state = self.recorder.next_move()
+        
+    def reset_record(self):
+        self.recorder.reset(self.state)
         
     def get_last_move(self):
         # 用於ui中棋盤標記上一步棋
@@ -90,3 +102,35 @@ class Game_Engine():
         if not make_move:
             return best_move
         self.make_move(*best_move)
+        
+    def game_loop(self, player_move, black_ai: bool, white_ai:bool)->bool:
+        """
+        觸發時機: 於pygame的主迴圈不斷執行
+        當遊戲已結束時回傳False
+        """
+        def is_ai_turn():
+            return self.get_turn()==1 and black_ai or self.get_turn()==2 and white_ai
+        
+        if player_move:
+            """
+            將player_move的判斷放在not self.is_terminal()外，
+            是因為可能在棋局結束後，
+            想回到上一手繼續走
+            """
+            self.make_move(*player_move)
+            
+        if not self.is_terminal():
+            if self.recorder.is_last_move():
+                """
+                基於本game engine與recorder綁定，
+                所以應該在沒有按「上一步」的情況下才自動跳步，
+                否則棋局會一直自動新增「PASS」而無法回「上一步」。
+                同時，按「上一步」的狀況下暫停ai走棋。
+                """
+                self.check_move() # 輪空規則
+                if self.get_hint():
+                    # 防呆: 合法棋步時才call ai
+                    if is_ai_turn():
+                        self.ai_action()
+            return True
+        return False

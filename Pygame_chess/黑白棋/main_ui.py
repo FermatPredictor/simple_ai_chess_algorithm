@@ -4,10 +4,16 @@ import spriteclass as sc
 import reversifunc as rf
 import globalvar as gv
 
+import os
+from datetime import datetime
+
 pygame.init()
 
 screen = pygame.display.set_mode((gv.WIDTH, gv.HEIGHT))
 pygame.display.set_caption('Reversi')
+
+def time_now():
+    return datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 
 # menu screen
 def Intro():
@@ -50,17 +56,26 @@ row_column and x_y，
 ui_board統一用x,y座標
 """
 def InGame():
-    game = rf.reversi_init_game(8,8)#Reversi_Game(8, 8)
+    game = rf.reversi_init_game(8,8)
 
     texts = pygame.sprite.Group()
     buttons = pygame.sprite.Group()
     ui_board = sc.chessBoard(game.get_board())
     
-    my_buttons = [None]*5
-    my_button_texts = ['Retry', 'Back', 'Edit', 'Play', 'Pass']
-    my_button_colors = [gv.YELLOW, gv.ORANGE, gv.YELLOW, gv.ORANGE, gv.GREEN]
-    for i in range(5):
-        my_buttons[i] = sc.my_button((850, 100+90*i), (150, 70), my_button_colors[i], (gv.HELV, 35, gv.BLACK, my_button_texts[i]))
+    
+    button_setting = [('Retry',gv.YELLOW) ,
+                      ('Menu', gv.ORANGE),
+                      ('Edit', gv.YELLOW),
+                      ('Play', gv.ORANGE),
+                      ('Pass', gv.GREEN),
+                      ('Back', gv.YELLOW),
+                      ('Next', gv.ORANGE),
+                      ('Save', gv.YELLOW)]
+    btn_num = len(button_setting)
+    my_buttons = [None]*btn_num
+    for i in range(btn_num):
+        text, color = button_setting[i]
+        my_buttons[i] = sc.my_button((850, 40+70*i), (150, 60), color, (gv.HELV, 35, gv.BLACK, text))
         buttons.add(my_buttons[i])
         
     def coord(X, Y):
@@ -76,22 +91,17 @@ def InGame():
 
     blackScore, whiteScore = 2, 2
     click_x, click_y = None, None
+    player_move = None
     
     MODE = 'play'
     
-    def is_ai_turn():
-        return game.get_turn()==1 and gv.P1_ai or game.get_turn()==2 and gv.P2_ai
     
     while True:
         texts.empty()
         
         if MODE == 'play':
-            if not game.is_terminal():
-                game.check_move() # 輪空規則
-                if is_ai_turn() and game.get_hint():
-                    # 防呆: 裡層檢查是否有合法棋步才call ai
-                    game.ai_action()
-            else:
+            loop = game.game_loop(player_move, gv.P1_ai, gv.P2_ai)
+            if not loop:
                 if blackScore > whiteScore:
                     result = 'BLACK WIN!'
                 elif blackScore < whiteScore:
@@ -114,8 +124,8 @@ def InGame():
                         click_x, click_y = aTile.xInd, aTile.yInd
                         if MODE == 'edit':
                             game.set_board(click_x, click_y)
-                        if MODE == 'play' and not is_ai_turn(): 
-                            game.make_move(click_x, click_y)
+                        if MODE == 'play': 
+                            player_move = (click_x, click_y)
                 
                 if my_buttons[0].rect.collidepoint(pygame.mouse.get_pos()):
                     InGame()
@@ -128,9 +138,21 @@ def InGame():
 
                 if my_buttons[3].rect.collidepoint(pygame.mouse.get_pos()):
                     MODE = 'play'
+                    game.reset_record()
                     
                 if my_buttons[4].rect.collidepoint(pygame.mouse.get_pos()):
                     game.change_turn()
+                
+                if my_buttons[5].rect.collidepoint(pygame.mouse.get_pos()):
+                    player_move = None
+                    game.back_move()
+                    
+                if my_buttons[6].rect.collidepoint(pygame.mouse.get_pos()):
+                    player_move = None
+                    game.next_move()
+                
+                if my_buttons[7].rect.collidepoint(pygame.mouse.get_pos()):
+                    game.save(os.path.join('.\\',time_now()+'.json'))
                     
                 for i in range(2):
                     for j in range(3):
