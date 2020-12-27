@@ -3,6 +3,7 @@ sys.path.append('../..') # 添加相對路徑上兩層到sys.path，讓程式找
 from Basic_Game_Logic.reversi_fast_ab import AB_ReversiState
 from _package.game_engine.general_game_engine import Game_Engine
 from Basic_Game_Logic.reversi_fast_ab import ab_action
+from Basic_Game_Logic.reversi_mcts import mcts_action, parallel_mcts_action
 
 class Reversi_Game(Game_Engine):
     

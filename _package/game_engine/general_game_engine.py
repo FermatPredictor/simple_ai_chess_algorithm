@@ -103,21 +103,13 @@ class Game_Engine():
             return best_move
         self.make_move(*best_move)
         
-    def game_loop(self, player_move, black_ai: bool, white_ai:bool)->bool:
+    def game_loop(self,  black_ai: bool, white_ai:bool)->bool:
         """
         觸發時機: 於pygame的主迴圈不斷執行
         當遊戲已結束時回傳False
         """
         def is_ai_turn():
             return self.get_turn()==1 and black_ai or self.get_turn()==2 and white_ai
-        
-        if player_move:
-            """
-            將player_move的判斷放在not self.is_terminal()外，
-            是因為可能在棋局結束後，
-            想回到上一手繼續走
-            """
-            self.make_move(*player_move)
             
         if not self.is_terminal():
             if self.recorder.is_last_move():

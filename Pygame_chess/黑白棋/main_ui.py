@@ -91,7 +91,6 @@ def InGame():
 
     blackScore, whiteScore = 2, 2
     click_x, click_y = None, None
-    player_move = None
     
     MODE = 'play'
     
@@ -100,7 +99,7 @@ def InGame():
         texts.empty()
         
         if MODE == 'play':
-            loop = game.game_loop(player_move, gv.P1_ai, gv.P2_ai)
+            loop = game.game_loop(gv.P1_ai, gv.P2_ai)
             if not loop:
                 if blackScore > whiteScore:
                     result = 'BLACK WIN!'
@@ -125,7 +124,7 @@ def InGame():
                         if MODE == 'edit':
                             game.set_board(click_x, click_y)
                         if MODE == 'play': 
-                            player_move = (click_x, click_y)
+                            game.make_move(click_x, click_y)
                 
                 if my_buttons[0].rect.collidepoint(pygame.mouse.get_pos()):
                     InGame()
@@ -144,11 +143,9 @@ def InGame():
                     game.change_turn()
                 
                 if my_buttons[5].rect.collidepoint(pygame.mouse.get_pos()):
-                    player_move = None
                     game.back_move()
                     
                 if my_buttons[6].rect.collidepoint(pygame.mouse.get_pos()):
-                    player_move = None
                     game.next_move()
                 
                 if my_buttons[7].rect.collidepoint(pygame.mouse.get_pos()):

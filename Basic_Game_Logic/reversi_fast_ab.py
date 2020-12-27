@@ -1,18 +1,12 @@
 import sys
 sys.path.append('..') # 添加相對路徑上兩層到sys.path，讓程式找到的模組_package
 from _package._game_theory.alpha_beta_algo import MinimaxABAgent
+from Basic_Game_Logic.Fast_Reversi_Cython.reversi_cython import getValidMoves as moves
+from Basic_Game_Logic.Fast_Reversi_Cython.reversi_cython import eval_func as ef
+from Basic_Game_Logic.Fast_Reversi_Cython.reversi_cython import count_tile
 
 from array import array
 import cProfile
-
-if __name__=='__main__':
-    from Fast_Reversi_Cython.reversi_cython import getValidMoves as moves
-    from Fast_Reversi_Cython.reversi_cython import eval_func as ef
-    from Fast_Reversi_Cython.reversi_cython import count_tile
-else:
-    from .Fast_Reversi_Cython.reversi_cython import getValidMoves as moves
-    from .Fast_Reversi_Cython.reversi_cython import eval_func as ef
-    from .Fast_Reversi_Cython.reversi_cython import count_tile
 
 class AB_ReversiState():
     """ 
